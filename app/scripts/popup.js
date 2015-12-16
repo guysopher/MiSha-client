@@ -17,11 +17,11 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
 
   $scope.notifyMe = function (userId) {
     var notify = new Pending({
-      user_id: '1',
-      waiting_for: userId,
-      message_id: 'notify me'
+      user_id: '567151fe7d2baa1d49c0dcfa',
+      waiting_for: '567151fe7d2baa1d49c0dcf9',
+      message_id: 'is now available!'
     });
-    notify.save();
+    notify.$save();
   };
 }]);
 //# sourceMappingURL=popup.js.map
