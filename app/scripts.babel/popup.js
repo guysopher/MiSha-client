@@ -73,7 +73,7 @@ angular
     var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
     $scope.users = $resource(api+'/user');
 
-    User.query()
+    User.query({limit:2000})
       .$promise.then(function(user) {
         $scope.users = user;
       });
