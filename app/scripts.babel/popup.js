@@ -27,8 +27,8 @@ angular
     var User = $resource(api + '/user/:userId', {userId:'@id'});
     var Pending = $resource(api + '/pending/:userId', {userId:'@id'});
 
-    chrome.identity.getProfileUserInfo(function(res) {
-      $scope.user = res.email;
+    chrome.storage.local.get('me', function(res) {
+      $scope.me = res.me;
     });
 
     $scope.notifyMe = function(userId) {
@@ -42,7 +42,7 @@ angular
 
     $scope.sendMessage = function(userId, message) {
       var notify = new Pending({
-        user_id: $scope.user.id,
+        user_id: $scope.me.id,
         waiting_for: userId,
         message: message
       });

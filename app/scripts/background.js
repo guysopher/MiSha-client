@@ -5,17 +5,25 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
-chrome.browserAction.setBadgeText({ text: '\'Allo' });
-
 var api = 'http://localhost:1337'; //'http://misha-api.herokuapp.com'
+
+var me = undefined;
+chrome.identity.getProfileUserInfo(function (res) {
+  var email = res.email;
+  $.get(api + '/user?email=' + email, function (res) {
+    me = res[0];
+    chrome.storage.local.set({ me: me });
+  });
+});
 
 var initInterval = function initInterval(me) {
   setInterval(function () {
-    $.post(api + '/user/seen?user_id=' + me.id, function (res) {
+    $.post(api + '/user/seen?user_id=' + user.id, function (res) {
       console.log("got response", res);
       console.count("got response");
 
       if (res.notify) {
+        chrome.browserAction.setBadgeText({ text: '1' });
         chrome.notifications.create('temp', {
           type: "basic",
           iconUrl: "images/icon-128.png",
@@ -31,37 +39,29 @@ var initInterval = function initInterval(me) {
   }, 12000);
 };
 
-var getUserIdFromEmail = function(email) {
-  $.get(api + '/user?email=' + email, function (res) {
-    var me = res[0];
-    chrome.storage.local.set({ me: me });
-    initInterval(me);
-  });
-}
-
 //OAUTH stuff
-chrome.identity.getProfileUserInfo(function(res) {
-  if (res.email) {
-    getUserIdFromEmail(res.email);
-  } else {
-    chrome.storage.local.get('me', function(res) {
-      if (res.me) {
-        initInterval(res.me);
-      } else {
-        chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-          //load Google's javascript client libraries
+/*
+chrome.identity.getAuthToken(
 
-          var x = new XMLHttpRequest();
-          x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
-          x.onload = function () {
-            var parsed_response = JSON.parse(x.response);
-            getUserIdFromEmail(parsed_response.email);
-          };
-          x.send();
-        });
-      }
-    });
+  {'interactive': true},
+  function(token){
+    //load Google's javascript client libraries
+
+    var x = new XMLHttpRequest();
+    x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
+    x.onload = function() {
+      var parsed_response = JSON.parse(x.response);
+      $.get(api+'/user?email='+parsed_response.email, function(res) {
+        var me = res[0];
+        chrome.storage.local.set({me: me});
+        initInterval(me);
+      });
+    };
+    x.send();
+
   }
-});
+);
 
+
+*/
 //# sourceMappingURL=background.js.map

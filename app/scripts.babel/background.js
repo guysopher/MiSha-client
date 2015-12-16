@@ -8,11 +8,12 @@
 
 var api = 'http://localhost:1337'; //'http://misha-api.herokuapp.com'
 
-var user = undefined;
+var me = undefined;
 chrome.identity.getProfileUserInfo(function(res) {
   var email = res.email;
   $.get(api+'/user?email=' + email, function(res) {
-    user = res[0];
+    me = res[0];
+    chrome.storage.local.set({me: me});
   });
 });
 
