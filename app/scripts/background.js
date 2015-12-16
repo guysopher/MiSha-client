@@ -5,6 +5,4 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.browserAction.setBadgeText({ text: '\'Allo' });
-
-console.log('\'Allo \'Allo! Event Page for Browser Action');
 //# sourceMappingURL=background.js.map
