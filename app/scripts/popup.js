@@ -19,12 +19,18 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   }).otherwise({
     redirectTo: '/'
   });
-}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {
+}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
 
   var api = 'http://localhost:1337';
 
   var User = $resource(api + '/user/:userId', { userId: '@id' });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
+
+  $scope.users = [];
+  $scope.username = "GUY";
+  User.query({ limit: 2000 }).$promise.then(function (data) {
+    $scope.users = data;
+  });
 
   chrome.storage.local.get('me', function (res) {
     $scope.me = res.me;
@@ -46,27 +52,6 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
       message: message
     });
     notify.$save();
-  };
-}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-
-  var api = 'http://localhost:1337';
-
-  var User = $resource(api + '/user/:userId', { userId: '@id' });
-  var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
-
-  $scope.users = [];
-  $scope.username = "GUY";
-  User.query({ limit: 2000 }).$promise.then(function (data) {
-    $scope.users = data;
-  });
-
-  $scope.notifyMe = function (userId) {
-    var notify = new Pending({
-      user_id: '1',
-      waiting_for: userId,
-      message_id: 'notify me'
-    });
-    notify.save();
   };
 }]);
 //# sourceMappingURL=popup.js.map
