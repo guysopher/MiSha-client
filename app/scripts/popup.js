@@ -43,8 +43,8 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
 
   $scope.sendMessage = function (userId, message) {
     var notify = new Pending({
-      user_id: $scope.me.id,
-      waiting_for: userId,
+      user_id: userId,
+      waiting_for: $scope.me.id,
       message: message
     });
     notify.$save();

@@ -13,22 +13,27 @@ chrome.identity.getProfileUserInfo(function (res) {
   $.get(api + '/user?email=' + email, function (res) {
     me = res[0];
     chrome.storage.local.set({ me: me });
+    console.log('Got User:', me);
+    initInterval(me);
   });
 });
 
 var initInterval = function initInterval(me) {
   setInterval(function () {
-    $.post(api + '/user/seen?user_id=' + user.id, function (res) {
+    $.post(api + '/user/seen?user_id=' + me.id, function (res) {
       console.log("got response", res);
       console.count("got response");
 
       if (res.notify) {
+        $.delete(api + '/pending/' + res.pending, function (res) {
+          console.log('Deleted: ', res);
+        });
         chrome.browserAction.setBadgeText({ text: '1' });
         chrome.notifications.create('temp', {
           type: "basic",
           iconUrl: "images/icon-128.png",
-          title: res.message,
-          message: "Default Message",
+          title: res.user,
+          message: res.message,
           expandedMessage: " Expanded message"
 
         }, function (data) {
