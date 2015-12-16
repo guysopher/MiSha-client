@@ -5,17 +5,27 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
-chrome.browserAction.setBadgeText({text: '\'Allo'});
 
 var api = 'http://localhost:1337'; //'http://misha-api.herokuapp.com'
 
+var me = undefined;
+chrome.identity.getProfileUserInfo(function(res) {
+  var email = res.email;
+  $.get(api+'/user?email=' + email, function(res) {
+    me = res[0];
+    chrome.storage.local.set({me: me});
+  });
+});
+
+
 var initInterval = function (me) {
   setInterval(function(){
-    $.post(api + '/user/seen?user_id=' + me.id, function(res) {
+    $.post(api + '/user/seen?user_id=' + user.id, function(res) {
       console.log("got response", res);
       console.count("got response");
 
       if (res.notify) {
+        chrome.browserAction.setBadgeText({text: '1'});
         chrome.notifications.create('temp', {
           type: "basic",
           iconUrl: "images/icon-128.png",
@@ -33,6 +43,7 @@ var initInterval = function (me) {
 
 
 //OAUTH stuff
+/*
 chrome.identity.getAuthToken(
 
   {'interactive': true},
@@ -55,3 +66,4 @@ chrome.identity.getAuthToken(
 );
 
 
+*/
