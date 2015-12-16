@@ -55,7 +55,7 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
   $scope.users = [];
-  $scope.userName = "GUY";
+  $scope.username = "GUY";
   User.query({ limit: 2000 }).$promise.then(function (data) {
     $scope.users = data;
   });
