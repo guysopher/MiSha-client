@@ -9,16 +9,6 @@
 var api = 'http://localhost:1337'; //'http://misha-api.herokuapp.com'
 
 var me = undefined;
-chrome.identity.getProfileUserInfo(function(res) {
-  var email = res.email;
-  $.get(api+'/user?email=' + email, function(res) {
-    me = res[0];
-    chrome.storage.local.set({me: me});
-    console.log('Got User:', me);
-    initInterval(me);
-  });
-});
-
 
 var initInterval = function (me) {
   setInterval(function(){
@@ -27,9 +17,9 @@ var initInterval = function (me) {
       console.count("got response");
 
       if (res.notify) {
-        $.delete(api + '/pending/' + res.pending, function(res) {
-          console.log('Deleted: ', res);
-        });
+        //$.delete(api + '/pending/' + res.pending, function(res) {
+        //  console.log('Deleted: ', res);
+        //});
         chrome.browserAction.setBadgeText({text: '1'});
         chrome.notifications.create('temp', {
           type: "basic",
@@ -48,7 +38,8 @@ var initInterval = function (me) {
 
 var getUserIdFromEmail = function(email) {
   $.get(api + '/user?email=' + email, function (res) {
-    var me = res[0];
+    me = res[0];
+    console.log('Got User:', me);
     chrome.storage.local.set({ me: me });
     initInterval(me);
   });
