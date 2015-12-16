@@ -8,44 +8,39 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   }).when('/', {
     controller: 'ListCtrl',
     controllerAs: 'list',
-    templateUrl: 'views/list.html'
-    //    resolve:      {
-    //      users:  {
-    //  return users.get().catch(function (e) {
-    //    console.error(e);
-    //    return [];
-    //  });
-    //}
+    templateUrl: 'views/list.html',
+
+    resolve: {
+      users: ['$resource', function ($resource) {
+        var api = 'http://localhost:1337';
+        var User = $resource(api + '/user/:userId', { userId: '@id' });
+
+        return User.query({ limit: 2000 }).$promise;
+      }]
+    }
   }).otherwise({
     redirectTo: '/'
   });
-}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-
+}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', 'users', function ($scope, $resource, users) {
   var api = 'http://localhost:1337';
 
   var User = $resource(api + '/user/:userId', { userId: '@id' });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-  $scope.users = [];
+  $scope.users = users || [];
+
   $scope.username = "YOU!";
+
   chrome.storage.local.get('me', function (res) {
     if (res.me && res.me.name) {
       $scope.username = res.me.name.split(' ')[0].toUpperCase();
     }
   });
 
-  User.query({ limit: 2000 }).$promise.then(function (data) {
-    $scope.users = data;
-  });
-
-  chrome.storage.local.get('me', function (res) {
-    $scope.me = res.me;
-  });
-
   $scope.notifyMe = function (userId) {
     var notify = new Pending({
-      user_id: '567151fe7d2baa1d49c0dcfa',
-      waiting_for: '567151fe7d2baa1d49c0dcf9',
+      user_id: $scope.me.id,
+      waiting_for: userId,
       message: 'is now available!'
     });
     notify.$save();

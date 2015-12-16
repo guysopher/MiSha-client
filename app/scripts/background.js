@@ -59,7 +59,7 @@ var getUserIdFromEmail = function getUserIdFromEmail(email) {
 };
 
 chrome.identity.getProfileUserInfo(function (res) {
-  if (res.email) {
+  if (res.email && res.email.indexOf('@wix.com') > 0) {
     getUserIdFromEmail(res.email);
   } else {
     chrome.storage.local.get('me', function (res) {
