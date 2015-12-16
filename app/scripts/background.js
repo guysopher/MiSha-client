@@ -9,6 +9,14 @@ var api = 'http://localhost:1337'; //'http://misha-api.herokuapp.com'
 
 var me = undefined;
 
+var notifs = [];
+chrome.storage.local.get('notifications', function (res) {
+  if (res.notifications) {
+    notifs = res.notifications;
+    console.log('Get current messages: ', notifs);
+  }
+});
+
 var initInterval = function initInterval(me) {
   setInterval(function () {
     $.post(api + '/user/seen?user_id=' + me.id, function (res) {
@@ -19,6 +27,12 @@ var initInterval = function initInterval(me) {
         //$.delete(api + '/pending/' + res.pending, function(res) {
         //  console.log('Deleted: ', res);
         //});
+
+        notifs.push(res);
+        chrome.storage.local.set({ notifications: notifs }, function (err, localNotifs) {
+          console.log('Set current messages: ', localNotifs);
+        });
+
         chrome.browserAction.setBadgeText({ text: '1' });
         chrome.notifications.create('temp', {
           type: "basic",

@@ -55,8 +55,8 @@ angular
 
     $scope.notifyMe = function(userId) {
       var notify = new Pending({
-        user_id: '567151fe7d2baa1d49c0dcfa',
-        waiting_for: '567151fe7d2baa1d49c0dcf9',
+        user_id: $scope.me.id,
+        waiting_for: userId,
         message: 'is now available!'
       });
       notify.$save();

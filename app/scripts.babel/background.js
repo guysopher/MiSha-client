@@ -12,8 +12,8 @@ var me = undefined;
 
 var notifs = [];
 chrome.storage.local.get('notifications', function (res) {
-  if (res.length > 1) {
-    notifs = res;
+  if (res.notifications) {
+    notifs = res.notifications;
     console.log('Get current messages: ', notifs);
   }
 });
@@ -31,7 +31,7 @@ var initInterval = function (me) {
         //});
 
         notifs.push(res);
-        chrome.storage.local.set({notifications: notifs}, function (localNotifs) {
+        chrome.storage.local.set({notifications: notifs}, function (err, localNotifs) {
           console.log('Set current messages: ', localNotifs);
         });
 
