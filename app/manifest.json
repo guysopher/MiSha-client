@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.37",
+  "version": "0.0.56",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -22,10 +22,19 @@
     "background",
     "cookies",
     "idle",
+    "identity",
     "notifications",
     "storage",
-    "webRequest"
+    "webRequest",
+    "https://accounts.google.com/o/oauth2/token"
   ],
+  "oauth2": {
+    "client_id": "1051518271202-tvprr3bt6rfupng6bssjc33b8i727ajp.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "options_ui": {
     "page": "options.html",
     "chrome_style": true
