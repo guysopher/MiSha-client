@@ -18,8 +18,6 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
     //}
   }).otherwise({
     redirectTo: '/'
-  }).otherwise({
-    redirectTo: '/'
   });
 }).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {
 
@@ -57,7 +55,7 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
   $scope.users = $resource(api + '/user');
 
-  User.query().$promise.then(function (user) {
+  User.query({ limit: 2000 }).$promise.then(function (user) {
     $scope.users = user;
   });
 

@@ -28,9 +28,6 @@ angular
     //}
       }).otherwise({
         redirectTo: '/'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   })
 

@@ -1,8 +1,8 @@
 <div class="jumbotron">
   <h1>wixers</h1>
   <input ng-model="searchText"></input>
-  <div ng-repeat="user in users | filter:searchText">
-    <div>{{user.name}}</div>
+  <div ng-show="searchText.length > 0" ng-repeat="user in users | filter:searchText">
+    <div>{{$index}} {{user.name}}</div>
     <!--<div>{{user.location}}</div>-->
   </div>
   <p class="lead">
