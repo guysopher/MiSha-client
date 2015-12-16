@@ -27,7 +27,13 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
   $scope.users = [];
-  $scope.username = "GUY";
+  $scope.username = "YOU!";
+  chrome.storage.local.get('me', function (res) {
+    if (res.me && res.me.name) {
+      $scope.username = res.me.name.split(' ')[0].toUpperCase();
+    }
+  });
+
   User.query({ limit: 2000 }).$promise.then(function (data) {
     $scope.users = data;
   });
