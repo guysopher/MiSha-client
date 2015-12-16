@@ -41,29 +41,35 @@ var initInterval = function (me) {
   }, 12000);
 }
 
+var getUserIdFromEmail = function(email) {
+  $.get(api + '/user?email=' + email, function (res) {
+    var me = res[0];
+    chrome.storage.local.set({ me: me });
+    initInterval(me);
+  });
+}
 
-//OAUTH stuff
-/*
-chrome.identity.getAuthToken(
 
-  {'interactive': true},
-  function(token){
-    //load Google's javascript client libraries
+chrome.identity.getProfileUserInfo(function(res) {
+  if (res.email) {
+    getUserIdFromEmail(res.email);
+  } else {
+    chrome.storage.local.get('me', function(res) {
+      if (res.me) {
+        initInterval(res.me);
+      } else {
+        chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+          //load Google's javascript client libraries
 
-    var x = new XMLHttpRequest();
-    x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
-    x.onload = function() {
-      var parsed_response = JSON.parse(x.response);
-      $.get(api+'/user?email='+parsed_response.email, function(res) {
-        var me = res[0];
-        chrome.storage.local.set({me: me});
-        initInterval(me);
-      });
-    };
-    x.send();
-
+          var x = new XMLHttpRequest();
+          x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
+          x.onload = function () {
+            var parsed_response = JSON.parse(x.response);
+            getUserIdFromEmail(parsed_response.email);
+          };
+          x.send();
+        });
+      }
+    });
   }
-);
-
-
-*/
+});
