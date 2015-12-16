@@ -21,7 +21,7 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
       waiting_for: userId,
       message_id: 'notify me'
     });
-    Pending.save(userId);
+    notify.save();
   };
 }]);
 //# sourceMappingURL=popup.js.map
