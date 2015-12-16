@@ -1,0 +1,11 @@
+<div class="jumbotron">
+  <h1>wixers</h1>
+  <input ng-model="searchText"></input>
+  <div ng-repeat="user in users | filter:searchText">
+    <div>{{user.name}}</div>
+    <!--<div>{{user.location}}</div>-->
+  </div>
+  <p class="lead">
+  </p>
+  <p><a class="btn btn-lg btn-success" ng-click="notifyMe('1')">Notify2</a></p>
+</div>

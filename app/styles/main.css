@@ -2,3 +2,9 @@ body {
   width: 300px;
   padding: 20px;
 }
+
+.albums-dashboard-button {
+  float: right;
+  display: inline-block;
+  margin: 15px 5px;
+}

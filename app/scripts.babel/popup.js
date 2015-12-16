@@ -10,10 +10,24 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/main', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
+      })
+      .when('/', {
+        controller:   'ListCtrl',
+        controllerAs: 'list',
+        templateUrl:  'views/list.html'
+    //    resolve:      {
+    //      users:  {
+    //  return users.get().catch(function (e) {
+    //    console.error(e);
+    //    return [];
+    //  });
+    //}
+      }).otherwise({
+        redirectTo: '/'
       })
       .otherwise({
         redirectTo: '/'
@@ -34,6 +48,30 @@ angular
         message_id: 'is now available!'
       });
       notify.$save();
+    }
+
+  }])
+
+  .controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
+
+    var api = 'http://localhost:1337';
+
+    var User = $resource(api + '/user/:userId', { userId: '@id' });
+    var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
+    $scope.users = $resource(api+'/user');
+
+    User.query()
+      .$promise.then(function(user) {
+        $scope.users = user;
+      });
+
+    $scope.notifyMe = function (userId) {
+      var notify = new Pending({
+        user_id: '1',
+        waiting_for: userId,
+        message_id: 'notify me'
+      });
+      notify.save();
     }
 
   }]);
