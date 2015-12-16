@@ -54,10 +54,10 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   var User = $resource(api + '/user/:userId', { userId: '@id' });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-  //$scope.users = [{name:"alan"}, {name:"oded"}, {name:"sopher"}];
   $scope.users = [];
-  User.query({ limit: 2000 }).$promise.then(function (user) {
-    $scope.users = user;
+  $scope.userName = "GUY";
+  User.query({ limit: 2000 }).$promise.then(function (data) {
+    $scope.users = data;
   });
 
   $scope.notifyMe = function (userId) {

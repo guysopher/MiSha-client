@@ -70,6 +70,7 @@ angular
     var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
     $scope.users = [];
+    $scope.userName = "GUY"
     User.query({limit:2000})
       .$promise.then(function(data) {
         $scope.users = data;
