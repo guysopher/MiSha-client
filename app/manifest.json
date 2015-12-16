@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.64",
+  "version": "0.0.66",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -30,7 +30,7 @@
     "https://accounts.google.com/o/oauth2/token"
   ],
   "oauth2": {
-    "client_id": "1051518271202-tvprr3bt6rfupng6bssjc33b8i727ajp.apps.googleusercontent.com",
+    "client_id": "1051518271202-64fst397g2iqr3sahpvb8iohofi3t289.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]
