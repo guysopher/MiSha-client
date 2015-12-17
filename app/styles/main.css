@@ -1,10 +1,114 @@
 body {
-  width: 300px;
+  width: 350px;
+  height: 500px;
   padding: 20px;
+  background: #6EA8F1;
+}
+
+footer {
+  position: absolute;
+  left: 40px;
+  bottom: 30px;
+  width: calc(100% - 80px);
+}
+
+footer span {
+  float: left;
+  color: white;
+  font-weight: 100;
+  font-size: 21px;
+  letter-spacing: 4px;
+}
+
+footer a {
+  float: right;
+  color: white;
+}
+
+footer a i {
+  font-size: 28px !important;
+}
+
+.jumbotron {
+  background: transparent;
+  color: white;
+  padding: 0;
+  margin: 0 20px;
+}
+
+.jumbotron h1 {
+  font-weight: 100;
+  color: white;
+  letter-spacing: 4px;
+  font-size: 32px;
 }
 
 .albums-dashboard-button {
   float: right;
   display: inline-block;
   margin: 15px 5px;
+}
+
+.search-person {
+  width: 100%;
+  border: 1px solid white !important;
+  border-radius: 25px;
+  background: transparent;
+  color: white;
+  font-size: 23px;
+  font-weight: 200;
+  margin: 35px 0;
+  line-height: 50px;
+  height: 50px;
+  padding: 0 20px;
+  outline: none !important;
+}
+
+.search-person::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color:    white;
+}
+
+.search-person[aria-expanded=true] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px solid white;
+
+}
+
+.custom-popup-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  width: 270px;
+  display: none;
+  background-color: rgba(255,255,255,0.8);
+  height: 50%;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 1px solid white;
+  border-top: none;
+  overflow: scroll;
+}
+
+.custom-popup-wrapper > .message {
+  padding: 10px 20px;
+  border-bottom: 1px solid #fff;
+  color: #333;
+  display: none;
+}
+
+.custom-popup-wrapper > .dropdown-menu {
+  position: static;
+  float: none;
+  display: block;
+  min-width: 160px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.custom-popup-wrapper > .dropdown-menu > li > a {
+  color: #6EA8F1;
 }

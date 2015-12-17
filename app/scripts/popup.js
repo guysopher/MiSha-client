@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize']).config(function ($routeProvider) {
+angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize']).config(function ($routeProvider) {
   $routeProvider.when('/main', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl',
@@ -26,10 +26,13 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
     }
   });
 
-  $scope.users = [];
+  chrome.storage.local.get('users', function (res) {
+    $scope.users = res;
+  });
 
-  User.query({ limit: 2000 }).$promise.then(function (data) {
-    $scope.users = data;
+  User.query({ limit: 2000 }, function (res) {
+    $scope.users = res;
+    chrome.storage.local.set({ 'users': res });
   });
 
   $scope.notifyMe = function (userId) {

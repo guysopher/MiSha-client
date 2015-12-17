@@ -2,6 +2,7 @@
 
 angular
   .module('misha', [
+    'ui.bootstrap.typeahead',
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -34,7 +35,8 @@ angular
     var User = $resource(api + '/user/:userId', { userId: '@id' });
     var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-    $scope.username = "YOU!"
+    $scope.username = "YOU!";
+    $scope.users = [];
 
     chrome.storage.local.get('me', function(res) {
       if(res.me && res.me.name) {
@@ -42,7 +44,15 @@ angular
       }
     });
 
-    $scope.users = [];
+    chrome.storage.local.get('users', function(res) {
+      $scope.users = res;
+    });
+
+    User.query({limit:2000}, function(res) {
+      $scope.users = res;
+      chrome.storage.local.set({'users': res});
+    });
+
 
     User.query({limit:2000})
      .$promise.then(function(data) {
