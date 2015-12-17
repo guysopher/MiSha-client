@@ -62,7 +62,8 @@ angular
         message: 'is now available!'
       });
       notify.$save();
-      $scope.selectedUser = false;
+      $scope.selectedUser = '';
+      $scope.appState = '';
     };
 
     $scope.sendMessage = function(userId, message) {
@@ -73,7 +74,8 @@ angular
         message: message
       });
       notify.$save();
-      $scope.selectedUser = false;
+      $scope.selectedUser = '';
+      $scope.appState = '';
     }
 
     $scope.selectUser = function(user) {
