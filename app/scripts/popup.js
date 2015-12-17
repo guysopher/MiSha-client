@@ -54,8 +54,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
       message: 'is now available!'
     });
     notify.$save();
-    $scope.selectedUser = '';
-    $scope.appState = '';
+    $scope.clearSelectedUser();
   };
 
   $scope.sendMessage = function (userId, message) {
@@ -66,6 +65,10 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
       message: message
     });
     notify.$save();
+    $scope.clearSelectedUser();
+  };
+
+  $scope.clearSelectedUser = function () {
     $scope.selectedUser = '';
     $scope.appState = '';
   };
@@ -73,6 +76,10 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.selectUser = function (user) {
     $scope.selectedUser = user;
     $scope.appState = isAvailable(user) ? 'available' : 'busy';
+  };
+
+  $scope.getLargeImage = function (url) {
+    return url.replace('thumb_small', 'original');
   };
 
   function isAvailable(user) {

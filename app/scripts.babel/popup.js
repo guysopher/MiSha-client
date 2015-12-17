@@ -71,8 +71,7 @@ angular
         message: 'is now available!'
       });
       notify.$save();
-      $scope.selectedUser = '';
-      $scope.appState = '';
+      $scope.clearSelectedUser();
     };
 
     $scope.sendMessage = function(userId, message) {
@@ -83,6 +82,11 @@ angular
         message: message
       });
       notify.$save();
+      $scope.clearSelectedUser();
+
+    }
+
+    $scope.clearSelectedUser = function() {
       $scope.selectedUser = '';
       $scope.appState = '';
     }
@@ -90,6 +94,10 @@ angular
     $scope.selectUser = function(user) {
       $scope.selectedUser = user;
       $scope.appState = isAvailable(user) ? 'available' : 'busy';
+    }
+
+    $scope.getLargeImage = function(url) {
+      return url.replace('thumb_small', 'original');
     }
 
     function isAvailable(user) {
