@@ -30,17 +30,18 @@ angular
   }])
 
   .controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-    var api = 'http://localhost:1337';
+    var api = 'http://misha-api.herokuapp.com';
 
     var User = $resource(api + '/user/:userId', { userId: '@id' });
     var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-    $scope.username = "YOU!";
+    $scope.username = "YOU";
     $scope.users = [];
 
     chrome.storage.local.get('me', function(res) {
       if(res.me && res.me.name) {
-        $scope.username = res.me.name.split(' ')[0].toUpperCase();
+        $scope.username = res.me.name.split(' ')[0];
+        $scope.me = res.me;
       }
     });
 
@@ -61,6 +62,7 @@ angular
         message: 'is now available!'
       });
       notify.$save();
+      $scope.selectedUser = false;
     };
 
     $scope.sendMessage = function(userId, message) {
@@ -71,11 +73,21 @@ angular
         message: message
       });
       notify.$save();
+      $scope.selectedUser = false;
     }
 
     $scope.selectUser = function(user) {
       $scope.selectedUser = user;
-
-      $scope.appState = 'available';
+      $scope.appState = isAvailable(user) ? 'available' : 'busy';
     }
+
+    function isAvailable(user) {
+      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
+      var now = (new Date()).getTime();
+      var lastSeen;
+      lastSeen = (new Date(Number(user.last_seen))).getTime();
+      return ((now - lastSeen) < (2 * 60 * 1000))
+    }
+
+
   }]);
