@@ -19,15 +19,6 @@ angular
         controller:   'ListCtrl',
         controllerAs: 'list',
         templateUrl:  'views/list.html',
-
-        resolve: {
-          users: ['$resource', function ($resource) {
-            var api = 'http://localhost:1337';
-            var User = $resource(api + '/user/:userId', {userId: '@id'});
-
-            return User.query({limit:2000}).$promise;
-          }]
-        }
       }).otherwise({
         redirectTo: '/'
       });
@@ -37,14 +28,12 @@ angular
 
   }])
 
-  .controller('ListCtrl', ['$scope', '$resource', 'users', function ($scope, $resource, users) {
+  .controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
     var api = 'http://localhost:1337';
 
     var User = $resource(api + '/user/:userId', { userId: '@id' });
     var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-    $scope.users = users || [];
-    
     $scope.username = "YOU!"
 
     chrome.storage.local.get('me', function(res) {
@@ -52,6 +41,13 @@ angular
         $scope.username = res.me.name.split(' ')[0].toUpperCase();
       }
     });
+
+    $scope.users = [];
+
+    User.query({limit:2000})
+     .$promise.then(function(data) {
+       $scope.users = data;
+     });
 
     $scope.notifyMe = function(userId) {
       var notify = new Pending({

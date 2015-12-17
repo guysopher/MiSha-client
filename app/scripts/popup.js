@@ -8,26 +8,15 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
   }).when('/', {
     controller: 'ListCtrl',
     controllerAs: 'list',
-    templateUrl: 'views/list.html',
-
-    resolve: {
-      users: ['$resource', function ($resource) {
-        var api = 'http://localhost:1337';
-        var User = $resource(api + '/user/:userId', { userId: '@id' });
-
-        return User.query({ limit: 2000 }).$promise;
-      }]
-    }
+    templateUrl: 'views/list.html'
   }).otherwise({
     redirectTo: '/'
   });
-}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', 'users', function ($scope, $resource, users) {
+}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
   var api = 'http://localhost:1337';
 
   var User = $resource(api + '/user/:userId', { userId: '@id' });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
-
-  $scope.users = users || [];
 
   $scope.username = "YOU!";
 
@@ -35,6 +24,12 @@ angular.module('misha', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngS
     if (res.me && res.me.name) {
       $scope.username = res.me.name.split(' ')[0].toUpperCase();
     }
+  });
+
+  $scope.users = [];
+
+  User.query({ limit: 2000 }).$promise.then(function (data) {
+    $scope.users = data;
   });
 
   $scope.notifyMe = function (userId) {
