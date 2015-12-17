@@ -72,6 +72,7 @@ angular
       });
       notify.$save();
       $scope.clearSelectedUser();
+
     };
 
     $scope.sendMessage = function(userId, message) {
@@ -81,9 +82,12 @@ angular
         waiting_for: $scope.me.id,
         message: message
       });
-      notify.$save();
-      $scope.clearSelectedUser();
-
+      notify.$save(function(data){
+        if(data && data.$resolved) {
+          $scope.clearSelectedUser();
+          window.close();
+        }
+      });
     }
 
     $scope.clearSelectedUser = function() {
