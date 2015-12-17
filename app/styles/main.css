@@ -1,8 +1,29 @@
+/*
+  red: #EF4F3F;
+  blue: #6EA8F1;
+  green: #50D086;
+*/
+
 body {
+  padding: 0;
+}
+
+.container {
   width: 350px;
   height: 500px;
   padding: 20px;
   background: #6EA8F1;
+  transition: background 0.5s ease;
+}
+
+.container.available {
+  background: #50D086;
+
+}
+
+.container.busy {
+  background: #EF4F3F;
+
 }
 
 footer {
@@ -33,7 +54,7 @@ footer a i {
   background: transparent;
   color: white;
   padding: 0;
-  margin: 0 20px;
+  margin: 0;
 }
 
 .jumbotron h1 {
@@ -41,12 +62,35 @@ footer a i {
   color: white;
   letter-spacing: 4px;
   font-size: 32px;
+  text-transform: uppercase;
 }
 
 .albums-dashboard-button {
   float: right;
   display: inline-block;
   margin: 15px 5px;
+}
+
+.message-person {
+  width: 100%;
+  border-radius: 25px;
+  border: none;
+  background: white;
+  font-size: 23px;
+  font-weight: 200;
+  margin: 35px 0;
+  line-height: 50px;
+  height: 50px;
+  padding: 0 20px;
+  outline: none !important;
+}
+
+.message-person.available {
+  color: #50D086;
+}
+
+.message-person.busy {
+  color: #EF4F3F;
 }
 
 .search-person {
@@ -80,7 +124,7 @@ footer a i {
   top: 100%;
   left: 0;
   z-index: 1000;
-  width: 270px;
+  width: calc(100% - 70px);
   display: none;
   background-color: rgba(255,255,255,0.8);
   height: 50%;

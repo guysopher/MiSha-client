@@ -11,7 +11,7 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/main', {
+      .when('/user', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
@@ -25,7 +25,7 @@ angular
       });
   })
 
-  .controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {
+  .controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {
 
   }])
 
@@ -53,13 +53,8 @@ angular
       chrome.storage.local.set({'users': res});
     });
 
-
-    User.query({limit:2000})
-     .$promise.then(function(data) {
-       $scope.users = data;
-     });
-
     $scope.notifyMe = function(userId) {
+      if (!userId) userId = $scope.selectedUser.id;
       var notify = new Pending({
         user_id: $scope.me.id,
         waiting_for: userId,
@@ -69,6 +64,7 @@ angular
     };
 
     $scope.sendMessage = function(userId, message) {
+      if (!userId) userId = $scope.selectedUser.id;
       var notify = new Pending({
         user_id: userId,
         waiting_for: $scope.me.id,
@@ -78,6 +74,8 @@ angular
     }
 
     $scope.selectUser = function(user) {
-      console.log('Selected User', user);
+      $scope.selectedUser = user;
+
+      $scope.appState = 'available';
     }
   }]);

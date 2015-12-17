@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize']).config(function ($routeProvider) {
-  $routeProvider.when('/main', {
+  $routeProvider.when('/user', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl',
     controllerAs: 'main'
@@ -12,13 +12,14 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   }).otherwise({
     redirectTo: '/'
   });
-}).controller('MainCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
+}).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
   var api = 'http://localhost:1337';
 
   var User = $resource(api + '/user/:userId', { userId: '@id' });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
   $scope.username = "YOU!";
+  $scope.users = [];
 
   chrome.storage.local.get('me', function (res) {
     if (res.me && res.me.name) {
@@ -36,6 +37,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   });
 
   $scope.notifyMe = function (userId) {
+    if (!userId) userId = $scope.selectedUser.id;
     var notify = new Pending({
       user_id: $scope.me.id,
       waiting_for: userId,
@@ -45,6 +47,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   };
 
   $scope.sendMessage = function (userId, message) {
+    if (!userId) userId = $scope.selectedUser.id;
     var notify = new Pending({
       user_id: userId,
       waiting_for: $scope.me.id,
@@ -54,7 +57,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   };
 
   $scope.selectUser = function (user) {
-    console.log('Selected User', user);
+    $scope.selectedUser = user;
+
+    $scope.appState = 'available';
   };
 }]);
 //# sourceMappingURL=popup.js.map
