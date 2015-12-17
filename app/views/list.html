@@ -3,23 +3,21 @@
   <!--<input ng-model="searchText"></input>-->
   <!--&lt;!&ndash;<div ng-show="searchText.length > 0" ng-repeat="user in users | filter:searchText">&ndash;&gt;-->
   <!--<div ng-show="searchText.length > 0" ng-repeat="user in users | filter:searchText">-->
-<!--
-  <div ng-show="searchText.length > 0" ng-repeat="user in users | filter:searchText">
-    <p><a class="btn btn-lg btn-success" ng-click="sendMessage('{{user.id}}', 'Hi ' + {{user.name.split(' ')[0]}})">Message to {{user.name}}</a></p>
+    <!--<div>{{$index}} {{user.name}}</div>-->
+    <!--&lt;!&ndash;<div>{{user.location}}</div>&ndash;&gt;-->
+  <!--</div>-->
 
-    &lt;!&ndash;<div>{{user.location}}</div>&ndash;&gt;
-  </div>
-  <hr>
-  <p class="lead">
-  </p>
+  <input autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder="" uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}" typeahead-popup-template-url="customPopupTemplate.html">
+
+<!--
   <p><a class="btn btn-lg btn-success" ng-click="notifyMe('567151fe7d2baa1d49c0dcfa')">Notify2</a></p>
 
   <p><a class="btn btn-lg btn-success" ng-click="sendMessage('567151fe7d2baa1d49c0dcfa', 'Hi Guy')">Message to Sopher</a></p>
   <p><a class="btn btn-lg btn-success" ng-click="sendMessage('567151fe7d2baa1d49c0dcf9', 'Oded the Shoded')">Message to Odesh</a></p>
   <p><a class="btn btn-lg btn-success" ng-click="sendMessage('5671521b7d2baa1d49c0dd18', 'Yo Brian')">Message to Brian</a></p>
   <p><a class="btn btn-lg btn-success" ng-click="sendMessage('567151237d2baa1d49c0d904', 'Miki Miki Miki Miki')">Message to Miki</a></p>
-
 -->
+
 </div>
 
 <script type="text/ng-template" id="customPopupTemplate.html">
@@ -27,12 +25,12 @@
        ng-style="{top: position().top+'px', left: position().left+'px'}"
        style="display: block;"
        ng-show="isOpen() && !moveInProgress"
-       aria-hidden="{{!isOpen()}}">
-    <p class="message">Who do you want to visit?</p>
+       aria-hidden="{{!isOpen()}}"
+  ><p class="message">Who do you want to visit?</p>
 
     <ul class="dropdown-menu" role="listbox">
       <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
-          ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+          ng-mouseenter="selectActive($index)" ng-click="selectMatch($index); selectUser(match);" role="option" id="{{::match.id}}">
         <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
       </li>
     </ul>

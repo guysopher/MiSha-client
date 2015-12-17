@@ -77,4 +77,7 @@ angular
       notify.$save();
     }
 
+    $scope.selectUser = function(user) {
+      console.log('Selected User', user);
+    }
   }]);

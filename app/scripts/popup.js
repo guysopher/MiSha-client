@@ -52,5 +52,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     });
     notify.$save();
   };
+
+  $scope.selectUser = function (user) {
+    console.log('Selected User', user);
+  };
 }]);
 //# sourceMappingURL=popup.js.map
