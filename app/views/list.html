@@ -18,6 +18,7 @@
 
   <div class="user-details">
     <div class="user-image" ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}"></div>
+    <div class="rate {{badge}}" ng-init="rate()"></div>
     <ul class="user-texts">
       <li><a>{{selectedUser.name}}</a></li>
       <li ng-show="selectedUser.title"><a>{{selectedUser.title}}</a></li>

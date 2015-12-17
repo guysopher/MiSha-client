@@ -94,5 +94,19 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     lastSeen = new Date(Number(user.last_seen)).getTime();
     return now - lastSeen < 2 * 60 * 1000;
   }
+
+  $scope.rate = function () {
+    switch (Math.floor(Math.random() * 3)) {
+      case 0:
+        $scope.badge = 'king';
+        break;
+      case 1:
+        $scope.badge = 'wixer';
+        break;
+      case 2:
+        $scope.badge = 'mega-kaker';
+        break;
+    }
+  };
 }]);
 //# sourceMappingURL=popup.js.map
