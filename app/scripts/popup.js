@@ -15,7 +15,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 }).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
   var api = 'http://misha-api.herokuapp.com';
 
-  var User = $resource(api + '/user/:userId', { userId: '@id' });
+  var User = $resource(api + '/user/:userId', { userId: '@id' }, {
+    'update': { method: 'PUT' }
+  });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
   $scope.username = "YOU";
@@ -29,13 +31,20 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   });
 
   chrome.storage.local.get('users', function (res) {
-    $scope.users = res;
+    if (angular.isArray(res) && res.length > 0) {
+      $scope.users = res;
+    } else {
+      User.query({ limit: 2000 }, function (res) {
+        $scope.users = res;
+        chrome.storage.local.set({ 'users': res });
+      });
+    }
   });
 
-  User.query({ limit: 2000 }, function (res) {
-    $scope.users = res;
-    chrome.storage.local.set({ 'users': res });
-  });
+  $scope.toggleBusy = function (isBusy) {
+    $scope.me.status = isBusy ? 'busy' : 'available';
+    User.update({ userId: $scope.me.id }, { status: $scope.me.status });
+  };
 
   $scope.notifyMe = function (userId) {
     if (!userId) userId = $scope.selectedUser.id;
@@ -68,6 +77,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   function isAvailable(user) {
     if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
+    if (!user.status || user.status == 'busy') return false;
     var now = new Date().getTime();
     var lastSeen;
     lastSeen = new Date(Number(user.last_seen)).getTime();

@@ -43,7 +43,8 @@ footer span {
 
 footer a {
   float: right;
-  color: white;
+  color: white !important;
+  cursor: pointer;
 }
 
 footer a i {

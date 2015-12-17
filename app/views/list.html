@@ -1,14 +1,35 @@
 <div class="jumbotron" ng-if="!selectedUser">
   <h1>{{username}}, WHO DO YOU WANT TO VISIT?</h1>
-  <input autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder="" uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}" typeahead-popup-template-url="customPopupTemplate.html" typeahead-on-select="selectUser($item, $model, $label)">
+  <input autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
+         uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
+         typeahead-popup-template-url="customPopupTemplate.html"
+         typeahead-on-select="selectUser($item, $model, $label)">
 </div>
 
 <div class="jumbotron" ng-if="selectedUser">
   <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN POP UP NOW.</h1>
+
   <h1 ng-if="appState == 'busy'">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} IS POOPING.</h1>
-  <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">I'm on my way!</button>
-  <button ng-if="appState == 'busy'" class="message-person busy" ng-click="notifyMe(false)">Notify when available</button>
+  <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
+    I'm on my way!
+  </button>
+  <button ng-if="appState == 'busy'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
+  </button>
+
+  <div class="user-details">
+    <img ng-src="selectedUser.photo_url"/>
+  </div>
 </div>
+
+<footer>
+      <span>
+        MISHA.M
+      </span>
+  <a ng-click="toggleBusy(me.status!='busy')" class="{{me.status}}">
+    <i class="fa fa-{{me.status=='busy' ? 'ban' : 'check-circle-o'}}"></i>
+  </a>
+</footer>
+
 
 <script type="text/ng-template" id="customPopupTemplate.html">
   <div class="custom-popup-wrapper"
@@ -20,7 +41,8 @@
 
     <ul class="dropdown-menu" role="listbox">
       <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
-          ng-mouseenter="selectActive($index)" ng-click="selectMatch($index); selectUser(match);" role="option" id="{{::match.id}}">
+          ng-mouseenter="selectActive($index)" ng-click="selectMatch($index); selectUser(match);" role="option"
+          id="{{::match.id}}">
         <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
       </li>
     </ul>
