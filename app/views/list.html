@@ -9,11 +9,11 @@
 <div class="jumbotron" ng-if="selectedUser">
   <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN POP UP NOW.</h1>
 
-  <h1 ng-if="appState == 'busy'">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} IS POOPING.</h1>
+  <h1 ng-if="appState != 'available'" title="{{me.reason}}">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} IS POOPING.</h1>
   <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
     I'm on my way!
   </button>
-  <button ng-if="appState == 'busy'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
+  <button ng-if="appState != 'available'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
   </button>
 
   <div class="user-details">
@@ -33,8 +33,9 @@
       <span ng-click="clearSelectedUser()">
         MISHA.M
       </span>
-  <a ng-click="toggleBusy(me.status!='busy')" class="{{me.status}}">
-    <i class="fa fa-{{me.status=='busy' ? 'ban' : 'check-circle-o'}}"></i>
+  <a ng-click="toggleBusy()" class="{{me.status}}" title="{{me.reason}}">
+    {{me.busy ? 'busy' : me.status}}
+    <!--<i class="fa fa-{{me.status=='busy' ? 'ban' : 'check-circle-o'}}"></i>-->
   </a>
 </footer>
 

@@ -44,6 +44,11 @@ footer span {
 
 footer a {
   float: right;
+  font-weight: 100;
+  font-size: 21px;
+  letter-spacing: 4px;
+  text-decoration: none !important;
+  text-transform: uppercase;
   color: white !important;
   cursor: pointer;
 }

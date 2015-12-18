@@ -13,7 +13,8 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     redirectTo: '/'
   });
 }).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-  var api = 'http://misha-api.herokuapp.com';
+  var api = 'http://localhost:1337'; // 'http://misha-api.herokuapp.com';
+  var bg = chrome.extension.getBackgroundPage();
 
   var User = $resource(api + '/user/:userId', { userId: '@id' }, {
     'update': { method: 'PUT' }
@@ -25,10 +26,14 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   chrome.storage.local.get('me', function (res) {
     if (res.me && res.me.name) {
-      $scope.username = res.me.name.split(' ')[0];
-      $scope.me = res.me;
+      $scope.username = bg.me.name.split(' ')[0];
+      $scope.me = bg.me;
     }
   });
+
+  setInterval(function () {
+    $scope.me = bg.me;
+  }, 12000);
 
   chrome.storage.local.get('users', function (res) {
     if (angular.isArray(res) && res.length > 0) {
@@ -42,8 +47,8 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   });
 
   $scope.toggleBusy = function (isBusy) {
-    $scope.me.status = isBusy ? 'busy' : 'available';
-    User.update({ userId: $scope.me.id }, { status: $scope.me.status });
+    $scope.me.busy = !$scope.me.busy;
+    User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
   };
 
   $scope.notifyMe = function (userId) {
@@ -88,7 +93,8 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   function isAvailable(user) {
     if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
-    if (!user.status || user.status == 'busy') return false;
+    if (!user.status || user.status != 'available') return false;
+    if (user.busy) return false;
     var now = new Date().getTime();
     var lastSeen;
     lastSeen = new Date(Number(user.last_seen)).getTime();

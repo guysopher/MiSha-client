@@ -18,40 +18,97 @@ chrome.storage.local.get('notifications', function (res) {
   }
 });
 
+function isAvailable(user) {
+  if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
+  if (!user.status || user.status != 'available') return false;
+  if (user.busy) return false;
+  var now = (new Date()).getTime();
+  var lastSeen;
+  lastSeen = (new Date(Number(user.last_seen))).getTime();
+  return ((now - lastSeen) < (2 * 60 * 1000))
+}
+
 
 var initInterval = function (me) {
   setInterval(function(){
 
     //if the user status is not busy - make sure he's not away
-    if (me.status != 'busy') {
+    if (me.busy) {
+      
+    }else{
+
+      if (typeof(me.reasons) == 'undefined') me.reasons = {};
+
       //if not charging - set as away
       navigator.getBattery().then(function (res) {
+        console.log('Got Battery: ', res);
         if (!res.charging) {
-          me.status = 'away';
+          console.log("You're running on battery power");
+          me.reasons['Running on battery power'] = true;
+        } else {
+          console.log("You're NOT running on battery power");
+          me.reasons['Running on battery power'] = false;
         }
       });
 
       //if not if tel-aviv port - set as away
       navigator.geolocation.getCurrentPosition(function(res) {
+
+        console.log('Got Location: ', res);
         var lat = res.coords.latitude;
         var lon = res.coords.longitude;
+
         if (lat < 32.102660 && lat > 32.096141 && lon > 34.772296 && lon < 34.777674) {
             //user is in the port
+          console.log("You're at Tel Aviv port");
+          me.reasons['Not at Tel-Aviv Port'] = false;
         } else {
-          me.status = 'away';
+          console.log("You're NOT at Tel Aviv port");
+          me.reasons['Not at Tel-Aviv Port'] = true;
         }
 
       });
 
       //if chrome is idle for 2 minutes - set status as away
       chrome.idle.queryState(2 * 60, function(res) {
+        console.log('Got Idle: ', res);
         if (res != 'active') {
-          me.status = 'away';
+          console.log("Chrome is idle");
+          me.reasons['Chrome is idle'] = true;
+        } else {
+          console.log("Chrome is NOT idle");
+          me.reasons['Chrome is idle'] = false;
         }
       });
 
+      if (isAvailable(me)) {
+        console.log("Computer is NOT sleeping");
+        me.reasons['Computer is sleeping'] = false;
+      } else {
+        console.log("Computer is sleeping");
+        me.reasons['Computer is sleeping'] = true;
+      }
+
       //todo (oded) if not free in calendar - set as away
+
+      var r;
+      var reasons = [];
+      for (r in me.reasons) {
+        if (me.reasons.hasOwnProperty(r) && (me.reasons[r] && me.reasons[r] != "false")) {
+          reasons.push(r);
+        }
+      }
+
+      me.reason = "";
+      if (reasons.length > 0) {
+        me.status = 'away';
+        me.reason = reasons.join(' & ');
+
+      }
     }
+
+    refreshUser(me);
+
     $.post(api + '/user/seen?user_id=' + me.id, {user: me}, function(res) {
       console.log("got response", res);
       console.count("got response");
@@ -88,6 +145,14 @@ var getUserIdFromEmail = function(email) {
     console.log('Got User:', me);
     chrome.storage.local.set({ me: me });
     initInterval(me);
+  });
+}
+
+var refreshUser = function(me) {
+  $.get(api + '/user/?id=' + me.id, function (res) {
+    me = res;
+    console.log('Got User:', me);
+    chrome.storage.local.set({ me: me });
   });
 }
 
