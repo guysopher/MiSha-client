@@ -47,8 +47,17 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
   };
 
+  $scope.invite = function (userId) {
+    if (!userId) userId = $scope.selectedUser.id;
+
+    User.save({ userId: 'invite' }, { email: $scope.selectedUser.email, name: $scope.selectedUser.name });
+
+    $scope.clearSelectedUser();
+  };
+
   $scope.notifyMe = function (userId) {
     if (!userId) userId = $scope.selectedUser.id;
+
     var notify = new Pending({
       user_id: $scope.me.id,
       waiting_for: userId,

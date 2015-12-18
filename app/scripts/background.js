@@ -138,7 +138,6 @@ var getUserIdFromEmail = function getUserIdFromEmail(email) {
   $.get(api + '/user?email=' + email, function (res) {
     me = res[0];
     console.log('Got User:', me);
-    chrome.storage.local.set({ me: me });
     initInterval(me);
   });
 };
@@ -147,7 +146,6 @@ var refreshUser = function refreshUser(me) {
   $.get(api + '/user/?id=' + me.id, function (res) {
     me = res;
     console.log('Got User:', me);
-    chrome.storage.local.set({ me: me });
   });
 };
 

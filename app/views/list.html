@@ -13,7 +13,9 @@
   <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
     I'm on my way!
   </button>
-  <button ng-if="appState != 'available'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
+  <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
+  </button>
+  <button ng-if="!selectedUser.last_seen && appState != 'available'" class="message-person busy" ng-click="invite(false)">Invite
   </button>
 
   <div class="user-details">
@@ -34,7 +36,7 @@
         MISHA.M
       </span>
   <a ng-click="toggleBusy()" class="{{me.status}}" title="{{me.reason}}">
-    {{me.busy ? 'busy' : me.status}}
+    {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
     <!--<i class="fa fa-{{me.status=='busy' ? 'ban' : 'check-circle-o'}}"></i>-->
   </a>
 </footer>
