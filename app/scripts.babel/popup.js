@@ -30,7 +30,8 @@ angular
   }])
 
   .controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-    var api = 'http://misha-api.herokuapp.com';
+    var api = 'http://localhost:1337';// 'http://misha-api.herokuapp.com';
+    var bg = chrome.extension.getBackgroundPage();
 
     var User = $resource(api + '/user/:userId', { userId: '@id' }, {
       'update': { method:'PUT' }
