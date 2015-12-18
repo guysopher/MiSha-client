@@ -6,7 +6,7 @@
 //});
 
 
-var api = 'http://misha-api.herokuapp.com';
+var api = 'http:localhost:1337'; //http://misha-api.herokuapp.com';
 
 var me = undefined;
 
@@ -21,7 +21,38 @@ chrome.storage.local.get('notifications', function (res) {
 
 var initInterval = function (me) {
   setInterval(function(){
-    $.post(api + '/user/seen?user_id=' + me.id, function(res) {
+
+    //if the user status is not busy - make sure he's not away
+    if (me.status != 'busy') {
+      //if not charging - set as away
+      navigator.getBattery().then(function (res) {
+        if (!res.charging) {
+          me.status = 'away';
+        }
+      });
+
+      //if not if tel-aviv port - set as away
+      navigator.geolocation.getCurrentPosition(function(res) {
+        var lat = res.coords.latitude;
+        var lon = res.coords.longitude;
+        if (lat < 32.102660 && lat > 32.096141 && lon > 34.772296 && lon < 34.777674) {
+            //user is in the port
+        } else {
+          me.status = 'away';
+        }
+
+      });
+
+      //if chrome is idle for 2 minutes - set status as away
+      chrome.idle.queryState(2 * 60, function(res) {
+        if (res != 'active') {
+          me.status = 'away';
+        }
+      });
+
+      //todo (oded) if not free in calendar - set as away
+    }
+    $.post(api + '/user/seen?user_id=' + me.id, {user: me}, function(res) {
       console.log("got response", res);
       console.count("got response");
 
