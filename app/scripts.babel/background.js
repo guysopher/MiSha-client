@@ -21,7 +21,7 @@ chrome.storage.local.get('notifications', function (res) {
 function isAvailable(user) {
   if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
   if (!user.status) return false;
-  if (user.busy) return false;
+  if (user.busy && user.busy != "false") return false;
   var now = (new Date()).getTime();
   var lastSeen;
   lastSeen = (new Date(Number(user.last_seen))).getTime();
