@@ -19,11 +19,12 @@ chrome.storage.local.get('notifications', function (res) {
 
 function isAvailable(user) {
   if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
-  if (!user.status || user.status != 'available') return false;
+  if (!user.status) return false;
   if (user.busy) return false;
   var now = new Date().getTime();
   var lastSeen;
   lastSeen = new Date(Number(user.last_seen)).getTime();
+  console.log("Last seen " + (now - lastSeen) / 60 / 1000 + " minutes ago");
   return now - lastSeen < 2 * 60 * 1000;
 }
 
@@ -31,7 +32,7 @@ var initInterval = function initInterval(me) {
   setInterval(function () {
 
     //if the user status is not busy - make sure he's not away
-    if (me.busy) {} else {
+    if (me.busy && me.busy != "false") {} else {
 
       if (typeof me.reasons == 'undefined') me.reasons = {};
 
@@ -156,6 +157,7 @@ chrome.identity.getProfileUserInfo(function (res) {
   } else {
     chrome.storage.local.get('me', function (res) {
       if (res.me) {
+        refreshUser();
         initInterval(res.me);
       } else {
         chrome.identity.getAuthToken({ 'interactive': true }, function (token) {

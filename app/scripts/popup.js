@@ -24,14 +24,10 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.username = "YOU";
   $scope.users = [];
 
-  chrome.storage.local.get('me', function (res) {
-    if (res.me && res.me.name) {
-      $scope.username = bg.me.name.split(' ')[0];
-      $scope.me = bg.me;
-    }
-  });
-
+  $scope.username = bg.me.name.split(' ')[0];
+  $scope.me = bg.me;
   setInterval(function () {
+    $scope.username = bg.me.name.split(' ')[0];
     $scope.me = bg.me;
   }, 12000);
 
