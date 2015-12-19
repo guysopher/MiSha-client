@@ -5,7 +5,7 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
-var api = 'http:localhost:1337'; //http://misha-api.herokuapp.com';
+var api = 'http://misha-api.herokuapp.com'; //'http:localhost:1337';
 
 var me = undefined;
 

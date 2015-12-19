@@ -9,7 +9,7 @@ angular
     'ngRoute',
     'ngSanitize'
   ])
-  .config(function ($routeProvider) {
+  .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
       .when('/user', {
         templateUrl: 'views/main.html',
@@ -23,7 +23,7 @@ angular
       }).otherwise({
         redirectTo: '/'
       });
-  })
+  }])
 
   .controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {
 

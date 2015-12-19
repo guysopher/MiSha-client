@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize']).config(function ($routeProvider) {
+angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.when('/user', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl',
@@ -12,8 +12,8 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   }).otherwise({
     redirectTo: '/'
   });
-}).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-  var api = 'http://localhost:1337'; // 'http://misha-api.herokuapp.com';
+}]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
+  var api = 'http://misha-api.herokuapp.com'; //'http:localhost:1337';
   var bg = chrome.extension.getBackgroundPage();
 
   var User = $resource(api + '/user/:userId', { userId: '@id' }, {
