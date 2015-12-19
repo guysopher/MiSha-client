@@ -20,7 +20,7 @@ chrome.storage.local.get('notifications', function (res) {
 function isAvailable(user) {
   if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
   if (!user.status) return false;
-  if (user.busy) return false;
+  if (user.busy && user.busy != "false") return false;
   var now = new Date().getTime();
   var lastSeen;
   lastSeen = new Date(Number(user.last_seen)).getTime();
@@ -28,7 +28,7 @@ function isAvailable(user) {
   return now - lastSeen < 2 * 60 * 1000;
 }
 
-var initInterval = function initInterval(me) {
+var initInterval = function initInterval() {
   setInterval(function () {
 
     //if the user status is not busy - make sure he's not away
@@ -138,12 +138,12 @@ var getUserIdFromEmail = function getUserIdFromEmail(email) {
   $.get(api + '/user?email=' + email, function (res) {
     me = res[0];
     console.log('Got User:', me);
-    initInterval(me);
+    initInterval();
   });
 };
 
-var refreshUser = function refreshUser(me) {
-  $.get(api + '/user/?id=' + me.id, function (res) {
+var refreshUser = function refreshUser(user) {
+  $.get(api + '/user/?id=' + user.id, function (res) {
     me = res;
     console.log('Got User:', me);
   });
@@ -156,7 +156,7 @@ chrome.identity.getProfileUserInfo(function (res) {
     chrome.storage.local.get('me', function (res) {
       if (res.me) {
         refreshUser();
-        initInterval(res.me);
+        initInterval();
       } else {
         chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
           //load Google's javascript client libraries

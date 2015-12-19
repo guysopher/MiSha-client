@@ -6,7 +6,7 @@
 //});
 
 
-var api = 'http:localhost:1337'; //http://misha-api.herokuapp.com';
+var api = 'http://misha-api.herokuapp.com'; //'http:localhost:1337';
 
 var me = undefined;
 
@@ -30,7 +30,7 @@ function isAvailable(user) {
 }
 
 
-var initInterval = function (me) {
+var initInterval = function () {
   setInterval(function(){
 
     //if the user status is not busy - make sure he's not away
@@ -144,12 +144,12 @@ var getUserIdFromEmail = function(email) {
   $.get(api + '/user?email=' + email, function (res) {
     me = res[0];
     console.log('Got User:', me);
-    initInterval(me);
+    initInterval();
   });
 }
 
-var refreshUser = function(me) {
-  $.get(api + '/user/?id=' + me.id, function (res) {
+var refreshUser = function(user) {
+  $.get(api + '/user/?id=' + user.id, function (res) {
     me = res;
     console.log('Got User:', me);
   });
@@ -163,7 +163,7 @@ chrome.identity.getProfileUserInfo(function(res) {
     chrome.storage.local.get('me', function(res) {
       if (res.me) {
         refreshUser();
-        initInterval(res.me);
+        initInterval();
       } else {
         chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
           //load Google's javascript client libraries
