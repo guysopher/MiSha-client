@@ -5,9 +5,12 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
-//var api = 'http://misha-api.herokuapp.com';;
-var api = 'http://localhost:1337';
 
+function isDevMode() {
+  return !('update_url' in chrome.runtime.getManifest());
+}
+
+var api = isDevMode() ? 'http://localhost:1337' : 'http://misha-api.herokuapp.com';
 var me = undefined;
 
 var seenInterval = 12 * 1000;
