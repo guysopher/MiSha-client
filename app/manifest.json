@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.122",
+  "version": "0.0.141",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -12,7 +12,8 @@
     "scripts": [
       "scripts/jquery-2.1.4.js",
       "scripts/chromereload.js",
-      "scripts/background.js"
+      "scripts/background.js",
+      "scripts/gapi-client.js"
     ]
   },
   "permissions": [
@@ -27,15 +28,16 @@
     "storage",
     "webRequest",
     "identity.email",
-    "https://accounts.google.com/o/oauth2/token"
+    "https://accounts.google.com/o/oauth2/token",
+    "https://www.googleapis.com/auth/calendar"
   ],
+  "content_security_policy": "script-src 'unsafe-eval' https://apis.google.com; object-src 'self'",
   "oauth2": {
-    "client_id": "1051518271202-64fst397g2iqr3sahpvb8iohofi3t289.apps.googleusercontent.com",
+    "client_id": "1051518271202-tvprr3bt6rfupng6bssjc33b8i727ajp.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "options_ui": {
     "page": "options.html",
     "chrome_style": true

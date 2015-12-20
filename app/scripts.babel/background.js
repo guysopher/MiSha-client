@@ -64,23 +64,24 @@ var getUserIdFromEmail = function(email) {
 chrome.identity.getProfileUserInfo(function(res) {
   if (res.email && res.email.indexOf('@wix.com') > 0) {
     getUserIdFromEmail(res.email);
-  } else {
-    chrome.storage.local.get('me', function(res) {
-      if (res.me) {
-        initInterval(res.me);
-      } else {
-        chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-          //load Google's javascript client libraries
 
-          var x = new XMLHttpRequest();
-          x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
-          x.onload = function () {
-            var parsed_response = JSON.parse(x.response);
-            getUserIdFromEmail(parsed_response.email);
-          };
-          x.send();
-        });
-      }
-    });
+  //} else {
+  //  chrome.storage.local.get('me', function(res) {
+  //    if (res.me) {
+  //      initInterval(res.me);
+  //    } else {
+  //      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+  //        //load Google's javascript client libraries
+  //
+  //        var x = new XMLHttpRequest();
+  //        x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
+  //        x.onload = function () {
+  //          var parsed_response = JSON.parse(x.response);
+  //          getUserIdFromEmail(parsed_response.email);
+  //        };
+  //        x.send();
+  //      });
+  //    }
+  //  });
   }
 });
