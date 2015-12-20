@@ -115,7 +115,7 @@ angular
     function isAvailable(user) {
       if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
       if (!user.status || user.status != 'available') return false;
-      if (user.busy) return false;
+      if (user.busy && user.busy != 'false') return false;
       var now = (new Date()).getTime();
       var lastSeen;
 
