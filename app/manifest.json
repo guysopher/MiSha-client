@@ -1,6 +1,7 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.199",
+  "version": "0.0.208",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgm0txKXemcujFa8fZ5HEDH5WmmGDilVQ49Pn+DcUw9Sn2SRrmbPYBeZ6RdKJ/McD6/i1tmQZsngzq5w+DNx+yQAWGTJgQaGHOvos5f0H6Fj+qQmqitL/fWdIgv980gmjCVCGQJEjktrv15992K57ZG6TlrpoMJuPmR/pA9AukOv0Ok/otS+qfZW91cwsaUgFYy2UG+NfBYxhAWdAZh/Cdd0kkwcwTM0ulxxvi0r2byU2iIGK8OoA+H814fxLuJlkNQs+SSVpTK9cUY2QXwUo2hZcb6kMj4P5CrwY2jrcreZCMsA9GWEtBu5Z43W+9JZcDXYZuFacfpWwe8Cr9oOfOQIDAQAB",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -31,7 +32,7 @@
   ],
   "content_security_policy": "script-src 'unsafe-eval' https://apis.google.com; object-src 'self'",
   "oauth2": {
-    "client_id": "1051518271202-tvprr3bt6rfupng6bssjc33b8i727ajp.apps.googleusercontent.com",
+    "client_id": "1051518271202-rdj4un013tk3bop5edfsgdaftocv17aa.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]

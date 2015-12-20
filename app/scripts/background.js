@@ -14,7 +14,34 @@ var me = undefined;
 var seenInterval = 12 * 1000;
 var awayDuration = 2 * 60 * 1000;
 
+var calenderCheckInterval = 5 * 60 * 1000;
+var busyCalender = false;
 var notifs = [];
+
+var checkBusyCalendar = function checkBusyCalendar() {
+  if (me && me.email) {
+    chrome.identity.getAuthToken({ 'interactive': true, scopes: ['https://www.googleapis.com/auth/calendar'] }, function (token) {
+      var now = new Date();
+      var next = new Date();
+      next.setTime(now.getTime() + 30 * 60 * 1000); //half an hour
+      var nowI = now.toISOString();
+      var nextI = next.toISOString();
+
+      $.ajax({
+        url: "https://www.googleapis.com/calendar/v3/calendars/" + me.email + "/events?timeMin=" + now.toISOString() + '&timeMax=' + next.toISOString(),
+        headers: {
+          Authorization: 'OAuth ' + token
+        }
+      }).done(function (data) {
+        busyCalender = data && data.items && data.items.length > 0;
+        console.log('busy calender result is: ', busyCalender);
+      });
+    });
+  } else {
+    busyCalender = false;
+  }
+};
+
 chrome.storage.local.get('notifications', function (res) {
   if (res.notifications) {
     notifs = res.notifications;
@@ -56,6 +83,7 @@ var seenLoop = function seenLoop() {
 
   me.rate = calculateRate(me.rateByDay, today, tomorrow);
 
+  me.status = me.status || 'available';
   chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
 
   //if the user status is not busy - make sure he's not away
@@ -112,10 +140,11 @@ var seenLoop = function seenLoop() {
       me.reasons['Computer is sleeping'] = true;
     }
 
-    //todo (oded) if not free in calendar - set as away
+    console.log('checking busy calender', busyCalender);
+    me.reasons['in meetings'] = busyCalender;
 
-    var r;
-    var reasons = [];
+    var r,
+        reasons = [];
     for (r in me.reasons) {
       if (me.reasons.hasOwnProperty(r) && me.reasons[r] && me.reasons[r] != "false") {
         reasons.push(r);
@@ -171,6 +200,7 @@ var initInterval = function initInterval() {
     me.rate = calculateRate(me.rateByDay, today, tomorrow);
   }
   setInterval(seenLoop, seenInterval);
+  seenLoop();
 };
 
 var getUserIdFromEmail = function getUserIdFromEmail(email) {
@@ -178,6 +208,9 @@ var getUserIdFromEmail = function getUserIdFromEmail(email) {
     me = res[0];
     console.log('Got User:', me);
     initInterval();
+
+    setInterval(checkBusyCalendar, calenderCheckInterval);
+    checkBusyCalendar();
   });
 };
 

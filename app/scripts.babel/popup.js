@@ -30,7 +30,7 @@ angular
   }])
 
 
-  .controller('ListCtrl', ['$scope', '$resource', '$http', function ($scope, $resource, $http) {
+  .controller('ListCtrl', ['$scope', '$resource', '$http', function ($scope, $resource) {
     var bg = chrome.extension.getBackgroundPage();
 
     var api = bg.api;
@@ -121,35 +121,7 @@ angular
 
       lastSeen = (new Date(Number(user.last_seen))).getTime();
 
-      var isAvail = ((now - lastSeen) < (bg.awayDuration));
-
-      if (isAvail) {
-        return checkBusyCalendar(user.email)
-      } else {
-        return false;
-      }
-      return
-    }
-
-    function checkBusyCalendar(email) {
-      chrome.identity.getAuthToken({ 'interactive': true, scopes:['https://www.googleapis.com/auth/calendar']}, function(token) {
-        var now = new Date();
-        var next = new Date();
-        next.setTime(now.getTime() + (30*60*1000)); //half an hour
-        var nowI = now.toISOString();
-        var nextI = next.toISOString();
-
-        $http({
-          method: 'GET',
-          url: "https://www.googleapis.com/calendar/v3/calendars/" + email + "/events?timeMin="+now.toISOString()+'&timeMax='+next.toISOString(),
-          headers: {
-            Authorization: 'OAuth '+token
-          }
-        }).then(function(data) {
-          data = data.data;
-          return(data && data.items && data.items.length > 0);
-        }, function(data) {return false});
-      });
+      return ((now - lastSeen) < (bg.awayDuration));
     }
 
     $scope.rate = function() {
