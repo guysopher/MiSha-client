@@ -13,50 +13,45 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     redirectTo: '/'
   });
 }]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', function ($scope, $resource) {
-  var api = 'http://misha-api.herokuapp.com'; //'http:localhost:1337';
+
   var bg = chrome.extension.getBackgroundPage();
+
+  var api = bg.api;
 
   var User = $resource(api + '/user/:userId', { userId: '@id' }, {
     'update': { method: 'PUT' }
   });
   var Pending = $resource(api + '/pending/:userId', { userId: '@id' });
 
-  $scope.username = "YOU";
+  $scope.username = "Hi";
   $scope.users = [];
 
-  $scope.username = bg.me.name.split(' ')[0];
-  $scope.me = bg.me;
-  setInterval(function () {
-    $scope.username = bg.me.name.split(' ')[0];
-    $scope.me = bg.me;
-  }, 12000);
-
-  chrome.storage.local.get('users', function (res) {
-    if (angular.isArray(res) && res.length > 0) {
+  function refreshUsers() {
+    $scope.me = bg && bg.me;
+    $scope.username = bg && bg.me && bg.me.name && bg.me.name.split(' ')[0];
+    User.query({ limit: 2000 }, function (res) {
       $scope.users = res;
-    } else {
-      User.query({ limit: 2000 }, function (res) {
-        $scope.users = res;
-        chrome.storage.local.set({ 'users': res });
-      });
-    }
-  });
+      chrome.storage.local.set({ 'users': res });
+    });
+  }
+  refreshUsers();
+  setInterval(refreshUsers, bg.seenInterval);
 
-  $scope.toggleBusy = function (isBusy) {
+  $scope.toggleBusy = function () {
+    if (!$scope.me) return;
     $scope.me.busy = !$scope.me.busy;
     User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
   };
 
-  $scope.invite = function (userId) {
-    if (!userId) userId = $scope.selectedUser.id;
-
+  $scope.invite = function () {
+    if (!$scope.selectedUser) return;
     User.save({ userId: 'invite' }, { email: $scope.selectedUser.email, name: $scope.selectedUser.name });
-
     $scope.clearSelectedUser();
   };
 
   $scope.notifyMe = function (userId) {
     if (!userId) userId = $scope.selectedUser.id;
+    if (!$scope.me) return;
 
     var notify = new Pending({
       user_id: $scope.me.id,
@@ -69,6 +64,8 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.sendMessage = function (userId, message) {
     if (!userId) userId = $scope.selectedUser.id;
+    if (!$scope.me) return;
+
     var notify = new Pending({
       user_id: userId,
       waiting_for: $scope.me.id,
@@ -93,6 +90,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   };
 
   $scope.getLargeImage = function (url) {
+    if (!url) return;
     return url.replace('thumb_small', 'original');
   };
 
@@ -103,7 +101,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     var now = new Date().getTime();
     var lastSeen;
     lastSeen = new Date(Number(user.last_seen)).getTime();
-    return now - lastSeen < 2 * 60 * 1000;
+    return now - lastSeen < bg.awayDuration;
   }
 
   $scope.rate = function () {

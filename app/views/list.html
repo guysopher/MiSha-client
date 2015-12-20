@@ -19,7 +19,7 @@
   </button>
 
   <div class="user-details">
-    <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank" ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}"></a>
+    <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank" ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}" title="{{me.rate}}"></a>
     <div class="rate {{badge}}" ng-init="rate()"></div>
     <ul class="user-texts">
       <li><a ng-href="{{selectedUser.url}}" target="_blank" >{{selectedUser.name}}</a></li>

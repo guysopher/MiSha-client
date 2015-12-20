@@ -5,9 +5,14 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
-var api = 'http://misha-api.herokuapp.com'; //'http:localhost:1337';
+//var api = 'http://misha-api.herokuapp.com';;
+
+var api = 'http://localhost:1337';
 
 var me = undefined;
+
+var seenInterval = 12 * 1000;
+var awayDuration = 2 * 60 * 1000;
 
 var notifs = [];
 chrome.storage.local.get('notifications', function (res) {
@@ -28,81 +33,103 @@ function isAvailable(user) {
   return now - lastSeen < 2 * 60 * 1000;
 }
 
-var initInterval = function initInterval() {
-  setInterval(function () {
+var calculateRate = function calculateRate(ratesByDays, today, tomorrow) {
+  //returns a number between 0 and 1
+  var total = 0;
+  for (var i = 0; i < 7; i++) {
+    if (i != today && i != tomorrow) {
+      total += ratesByDays[i];
+    }
+  }
+  total = Math.min(1, total / 60 / 60 / 8 / 5);
+  //8 hours a day in the last 5 days is the max
+  return total;
+};
 
-    //if the user status is not busy - make sure he's not away
-    if (me.busy && me.busy != "false") {} else {
+var seenLoop = function seenLoop() {
 
-      if (typeof me.reasons == 'undefined') me.reasons = {};
+  var today = new Date().getDay();
+  var tomorrow = (new Date().getDay() + 1) % 7;
 
-      //if not charging - set as away
-      navigator.getBattery().then(function (res) {
-        console.log('Got Battery: ', res);
-        if (!res.charging) {
-          console.log("You're running on battery power");
-          me.reasons['Running on battery power'] = true;
-        } else {
-          console.log("You're NOT running on battery power");
-          me.reasons['Running on battery power'] = false;
-        }
-      });
+  //clear next day data
+  me.rateByDay[tomorrow] = 0;
 
-      //if not if tel-aviv port - set as away
-      navigator.geolocation.getCurrentPosition(function (res) {
+  me.rate = calculateRate(me.rateByDay, today, tomorrow);
 
-        console.log('Got Location: ', res);
-        var lat = res.coords.latitude;
-        var lon = res.coords.longitude;
+  chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
 
-        if (lat < 32.102660 && lat > 32.096141 && lon > 34.772296 && lon < 34.777674) {
-          //user is in the port
-          console.log("You're at Tel Aviv port");
-          me.reasons['Not at Tel-Aviv Port'] = false;
-        } else {
-          console.log("You're NOT at Tel Aviv port");
-          me.reasons['Not at Tel-Aviv Port'] = true;
-        }
-      });
+  //if the user status is not busy - make sure he's not away
+  if (me.busy && me.busy != "false") {} else {
 
-      //if chrome is idle for 2 minutes - set status as away
-      chrome.idle.queryState(2 * 60, function (res) {
-        console.log('Got Idle: ', res);
-        if (res != 'active') {
-          console.log("Chrome is idle");
-          me.reasons['Chrome is idle'] = true;
-        } else {
-          console.log("Chrome is NOT idle");
-          me.reasons['Chrome is idle'] = false;
-        }
-      });
+    if (typeof me.reasons == 'undefined') me.reasons = {};
 
-      if (isAvailable(me)) {
-        console.log("Computer is NOT sleeping");
-        me.reasons['Computer is sleeping'] = false;
+    //if not charging - set as away
+    navigator.getBattery().then(function (res) {
+      console.log('Got Battery: ', res);
+      if (!res.charging) {
+        console.log("You're running on battery power");
+        me.reasons['Running on battery power'] = true;
       } else {
-        console.log("Computer is sleeping");
-        me.reasons['Computer is sleeping'] = true;
+        console.log("You're NOT running on battery power");
+        me.reasons['Running on battery power'] = false;
       }
+    });
 
-      //todo (oded) if not free in calendar - set as away
+    //if not if tel-aviv port - set as away
+    navigator.geolocation.getCurrentPosition(function (res) {
 
-      var r;
-      var reasons = [];
-      for (r in me.reasons) {
-        if (me.reasons.hasOwnProperty(r) && me.reasons[r] && me.reasons[r] != "false") {
-          reasons.push(r);
-        }
+      console.log('Got Location: ', res);
+      var lat = res.coords.latitude;
+      var lon = res.coords.longitude;
+
+      if (lat < 32.102660 && lat > 32.096141 && lon > 34.772296 && lon < 34.777674) {
+        //user is in the port
+        console.log("You're at Tel Aviv port");
+        me.reasons['Not at Tel-Aviv Port'] = false;
+      } else {
+        console.log("You're NOT at Tel Aviv port");
+        me.reasons['Not at Tel-Aviv Port'] = true;
       }
+    });
 
-      me.reason = "";
-      if (reasons.length > 0) {
-        me.status = 'away';
-        me.reason = reasons.join(' & ');
+    //if chrome is idle for 2 minutes - set status as away
+    chrome.idle.queryState(2 * 60, function (res) {
+      console.log('Got Idle: ', res);
+      if (res != 'active') {
+        console.log("Chrome is idle");
+        me.reasons['Chrome is idle'] = true;
+      } else {
+        console.log("Chrome is NOT idle");
+        me.reasons['Chrome is idle'] = false;
+      }
+    });
+
+    if (isAvailable(me)) {
+      console.log("Computer is NOT sleeping");
+      me.reasons['Computer is sleeping'] = false;
+    } else {
+      console.log("Computer is sleeping");
+      me.reasons['Computer is sleeping'] = true;
+    }
+
+    //todo (oded) if not free in calendar - set as away
+
+    var r;
+    var reasons = [];
+    for (r in me.reasons) {
+      if (me.reasons.hasOwnProperty(r) && me.reasons[r] && me.reasons[r] != "false") {
+        reasons.push(r);
       }
     }
 
-    refreshUser(me);
+    me.reason = "";
+    if (reasons.length > 0) {
+      me.status = 'away';
+      me.reason = reasons.join(' & ');
+    }
+
+    //add seenInterval seconds to availability rate
+    me.rateByDay[today] += seenInterval / 1000;
 
     $.post(api + '/user/seen?user_id=' + me.id, { user: me }, function (res) {
       console.log("got response", res);
@@ -118,7 +145,6 @@ var initInterval = function initInterval() {
           console.log('Set current messages: ', localNotifs);
         });
 
-        chrome.browserAction.setBadgeText({ text: '1' });
         chrome.notifications.create('temp', {
           type: "basic",
           iconUrl: "images/icon-128.png",
@@ -131,7 +157,20 @@ var initInterval = function initInterval() {
         });
       }
     });
-  }, 12000);
+  }
+};
+
+var initInterval = function initInterval() {
+
+  var defaultRate = 60 * 60 * 4; //four hours
+
+  if (!me.rate) {
+    me.rateByDay = [defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate];
+    var today = new Date().getDay();
+    var tomorrow = (new Date().getDay() + 1) % 7;
+    me.rate = calculateRate(me.rateByDay, today, tomorrow);
+  }
+  setInterval(seenLoop, seenInterval);
 };
 
 var getUserIdFromEmail = function getUserIdFromEmail(email) {
@@ -143,6 +182,7 @@ var getUserIdFromEmail = function getUserIdFromEmail(email) {
 };
 
 var refreshUser = function refreshUser(user) {
+  return;
   $.get(api + '/user/?id=' + user.id, function (res) {
     me = res;
     console.log('Got User:', me);
