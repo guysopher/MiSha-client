@@ -156,6 +156,8 @@ var seenLoop = function seenLoop() {
     if (reasons.length > 0) {
       me.status = 'away';
       me.reason = reasons.join(' & ');
+    } else {
+      me.status = 'available';
     }
 
     //add seenInterval seconds to availability rate
