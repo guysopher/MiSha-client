@@ -49,23 +49,23 @@ chrome.storage.local.get('notifications', function (res) {
   }
 });
 
-function isAvailable(user) {
-  if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
-  if (!user.status) return false;
-  if (user.busy && user.busy != "false") return false;
-  var now = new Date().getTime();
-  var lastSeen;
-  lastSeen = new Date(Number(user.last_seen)).getTime();
-  console.log("Last seen " + (now - lastSeen) / 60 / 1000 + " minutes ago");
-  return now - lastSeen < 2 * 60 * 1000;
-}
+//function isAvailable(user) {
+//  if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
+//  if (!user.status) return false;
+//  if (user.busy && user.busy != "false") return false;
+//  var now = (new Date()).getTime();
+//  var lastSeen;
+//  lastSeen = (new Date(Number(user.last_seen))).getTime();
+//  console.log("Last seen " + (now - lastSeen) / 60 / 1000 + " minutes ago");
+//  return ((now - lastSeen) < (2 * 60 * 1000))
+//}
 
 var calculateRate = function calculateRate(ratesByDays, today, tomorrow) {
   //returns a number between 0 and 1
   var total = 0;
   for (var i = 0; i < 7; i++) {
     if (i != today && i != tomorrow) {
-      total += ratesByDays[i];
+      total += Number(ratesByDays[i]);
     }
   }
   total = Math.min(1, total / 60 / 60 / 8 / 5);
@@ -132,13 +132,14 @@ var seenLoop = function seenLoop() {
       }
     });
 
-    if (isAvailable(me)) {
-      console.log("Computer is NOT sleeping");
-      me.reasons['Computer is sleeping'] = false;
-    } else {
-      console.log("Computer is sleeping");
-      me.reasons['Computer is sleeping'] = true;
-    }
+    //if (isAvailable(me)) {
+    //  console.log("Computer is NOT sleeping");
+    //  me.reasons['Computer is sleeping'] = false;
+    //} else {
+    //  console.log("Computer is sleeping");
+    //  me.reasons['Computer is sleeping'] = true;
+    //}
+    me.reasons['Computer is sleeping'] = false;
 
     console.log('checking busy calender', busyCalender);
     me.reasons['in meetings'] = busyCalender;
