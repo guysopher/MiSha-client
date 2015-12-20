@@ -18,6 +18,8 @@ var awayDuration = 2 * 60 * 1000;
 var calenderCheckInterval = 5 * 60 * 1000;
 var busyCalender = false;
 var notifs = [];
+var MAX_PER_DAY = 60 * 60 * 8;
+var MAX_PER_WEEK = MAX_PER_DAY * 5;
 
 var checkBusyCalendar = function checkBusyCalendar() {
   if (me && me.email) {
@@ -69,7 +71,7 @@ var calculateRate = function calculateRate(ratesByDays, today, tomorrow) {
       total += Number(ratesByDays[i]);
     }
   }
-  total = Math.min(1, total / 60 / 60 / 8 / 5);
+  total = Math.min(1, total / MAX_PER_WEEK);
   //8 hours a day in the last 5 days is the max
   return total;
 };
@@ -162,7 +164,7 @@ var seenLoop = function seenLoop() {
     }
 
     //add seenInterval seconds to availability rate
-    me.rateByDay[today] += seenInterval / 1000;
+    me.rateByDay[today] = Math.min(Number(me.rateByDay[today]) + seenInterval / 1000, MAX_PER_DAY);
 
     $.post(api + '/user/seen?user_id=' + me.id, { user: me }, function (res) {
       console.log("got response", res);
