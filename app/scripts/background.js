@@ -87,11 +87,12 @@ var seenLoop = function seenLoop() {
   me.rate = calculateRate(me.rateByDay, today, tomorrow);
 
   me.status = me.status || 'available';
-  chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
 
   //if the user status is not busy - make sure he's not away
-  if (me.busy && me.busy != "false") {} else {
-
+  if (me.busy && me.busy != "false") {
+    chrome.browserAction.setBadgeText({ text: 'busy' });
+  } else {
+    chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
     if (typeof me.reasons == 'undefined') me.reasons = {};
 
     //if not charging - set as away

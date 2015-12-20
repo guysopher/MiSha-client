@@ -57,6 +57,12 @@ angular
     $scope.toggleBusy = function() {
       if (!$scope.me) return;
       $scope.me.busy = !$scope.me.busy;
+      if ($scope.me.busy) {
+        chrome.browserAction.setBadgeText({text: 'busy'});
+      } else {
+        chrome.browserAction.setBadgeText({text: $scope.me.status.replace('available', 'free')});
+      }
+
       User.update({userId: $scope.me.id}, {busy: $scope.me.busy});
     };
 

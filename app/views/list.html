@@ -1,9 +1,10 @@
 <div class="jumbotron" ng-if="!selectedUser">
   <h1>{{username}}, WHO DO YOU WANT TO VISIT?</h1>
-  <input autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
+  <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
          typeahead-popup-template-url="customPopupTemplate.html"
          typeahead-on-select="selectUser($item, $model, $label)">
+  <div ng-if="users.length == 0">Loading...</div>
 </div>
 
 <div class="jumbotron" ng-if="selectedUser">
