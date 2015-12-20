@@ -9,3 +9,5 @@ package
 scripts/*.js
 scripts/*.map
 .idea/*
+app.crx
+app.pem
