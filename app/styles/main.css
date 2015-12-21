@@ -4,6 +4,20 @@
   green: #50D086;
 */
 
+@font-face {
+  font-family: 'brandon';
+  src: url('../fonts/Brandon_light.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'belinda';
+  src: url('../fonts/belinda.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .red {
   color: #EF4F3F !important;
 }
@@ -33,6 +47,7 @@
 
 body {
   padding: 0;
+  font-family: 'brandon';
 }
 
 .container {
@@ -73,7 +88,6 @@ footer {
 footer span {
   float: left;
   color: white;
-  font-weight: 100;
   font-size: 16px;
   letter-spacing: 4px;
   cursor: pointer;
@@ -85,7 +99,6 @@ footer span {
 footer i {
   float: right;
   text-align: center;
-  font-weight: 100;
   font-size: 32px !important;
   line-height: 50px !important;
   text-decoration: none !important;
@@ -265,7 +278,7 @@ footer i {
 }
 
 .user-details.up {
-  top: 20px;
+  top: 100px;
 
 }
 

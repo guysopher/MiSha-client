@@ -120,10 +120,10 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.selectUser = function (user) {
     $scope.selectedUser = user;
-    //$scope.appState = isAvailable(user) ? 'available' : 'busy';
     $scope.appState = getUserAvailability(user);
     User.get({ userId: user.id }, function (res) {
       $scope.selectedUser = res;
+      $scope.appState = getUserAvailability(res);
     });
   };
 

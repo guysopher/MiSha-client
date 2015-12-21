@@ -47,9 +47,6 @@
 </div>
 
 <div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser" ng-class="{up: detailed}">
-  <img ng-if="appState == 'available'" src="images/icons/green.png" ng-click="clearSelectedUser()"/>
-  <img ng-if="appState == 'away'" src="images/icons/yellow.png" ng-click="clearSelectedUser()"/>
-  <img ng-if="appState == 'busy'" src="images/icons/red.png" ng-click="clearSelectedUser()"/>
 
   <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank"
      ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}" title="{{me.rate}}"></a>
@@ -63,7 +60,7 @@
   </ul>
 </div>
 
-<footer ng-if="started">
+<footer ng-if="started && me && me.status">
   <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}">
     You're {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
   </span>
