@@ -52,7 +52,7 @@ body {
 
 .container {
   width: 350px;
-  height: 530px;
+  height: 590px;
   padding: 20px;
   background: #6EA8F1;
   transition: background 0.5s ease;
@@ -156,21 +156,20 @@ footer i {
   margin-bottom: 90px;
 }
 
-.jumbotron i {
-  margin: auto;
+.jumbotron img.plus {
   display: block;
   text-align: center;
-  font-size: 30px;
   cursor: pointer;
   position: absolute;
-  width: 100%;
-  left: 0;
-  bottom: 70px;
+  margin: 0;
+  margin-left: -11px;
+  left: 50%;
+  bottom: 75px;
   transition: all 0.8s ease;
   z-index: 801;
 }
 
-.jumbotron i.x {
+.jumbotron img.plus.x {
   transform: rotate(135deg);
 }
 
@@ -237,7 +236,7 @@ footer i {
   z-index: 1000;
   width: calc(100% - 70px);
   display: none;
-  background-color: rgba(255,255,255,0.8);
+  background-color: transparent;
   height: 50%;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -265,7 +264,17 @@ footer i {
 }
 
 .custom-popup-wrapper > .dropdown-menu > li > a {
-  color: #6EA8F1;
+  color: white;
+  line-height: 40px;
+  font-size: 17px;
+}
+
+.custom-popup-wrapper > .dropdown-menu > li:hover > a {
+  color: #438ce7;
+}
+
+.custom-popup-wrapper > .dropdown-menu > .active > a {
+  background: transparent;
 }
 
 .user-details {
