@@ -1,12 +1,12 @@
-<div class="jumbotron" ng-if="!started">
+<div class="jumbotron" ng-if="started !== true">
   <img class="main-page" src="images/white-81x85.png"/>
 
   <h2 style="font-family:'belinda'">misha.m</h2>
   <h4>NEVER NEEDLESSLY WALK AGAIN</h4>
-  <button class="message-person blue" ng-click="start()">SEARCH NOW</button>
+  <button class="message-person blue" ng-click="start()" ng-if="started != 'init' " >SEARCH NOW</button>
 </div>
 
-<div class="jumbotron" ng-if="started && !selectedUser">
+<div class="jumbotron" ng-if="(started === true) && !selectedUser">
   <img src="images/icons/blue.png"/>
 
   <h1>GOOD {{timeOfDay}} {{username}}, WHO DO YOU WANT TO VISIT?</h1>

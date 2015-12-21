@@ -24,7 +24,14 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.username = "Hi";
   $scope.users = [];
-  $scope.started = localStorage['start'];
+  $scope.started = 'init';
+  chrome.storage.local.get('started', function (res) {
+    if (res.started) {
+      $scope.started = res.started;
+    } else {
+      $scope.started = false;
+    }
+  });
   $scope.detailed = false;
   $scope.timeOfDay = calculateTimeOfDay();
 
@@ -73,7 +80,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   };
 
   $scope.start = function () {
-    localStorage['started'] = true;
+    chrome.storage.local.set({ 'started': true });
     $scope.started = true;
   };
 
