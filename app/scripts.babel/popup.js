@@ -42,6 +42,7 @@ angular
 
     $scope.username = "Hi";
     $scope.users = [];
+    $scope.started = localStorage['start'];
 
     function refreshUsers() {
       $scope.me = bg && bg.me;
@@ -56,13 +57,17 @@ angular
       if (!$scope.me) return;
       $scope.me.busy = !$scope.me.busy;
       if ($scope.me.busy) {
-        chrome.browserAction.setBadgeText({text: 'busy'});
+        chrome.browserAction.setIcon({'path': api + '/images/icons/red.png'})
       } else {
-        chrome.browserAction.setBadgeText({text: $scope.me.status.replace('available', 'free')});
+        chrome.browserAction.setIcon({'path': api + '/images/icons/' + (me.status=='available' ? 'green' : 'yellow') + '.png'})
       }
 
       User.update({userId: $scope.me.id}, {busy: $scope.me.busy});
     };
+
+    $scope.started = function() {
+      localStorage['started'] = true;
+    }
 
     $scope.invite = function() {
       if (!$scope.selectedUser) return;

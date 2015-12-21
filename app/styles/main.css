@@ -4,6 +4,20 @@
   green: #50D086;
 */
 
+@font-face {
+  font-family: 'brandon';
+  src: url('../fonts/Brandon_light.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'belinda';
+  src: url('../fonts/belinda.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .red {
   color: #EF4F3F;
 }
@@ -20,6 +34,7 @@
 
 body {
   padding: 0;
+  font-family: 'brandon';
 }
 
 .container {
@@ -60,7 +75,6 @@ footer {
 footer span {
   float: left;
   color: white;
-  font-weight: 100;
   font-size: 16px;
   letter-spacing: 4px;
   cursor: pointer;
@@ -70,7 +84,6 @@ footer span {
 footer i {
   float: right;
   text-align: center;
-  font-weight: 100;
   font-size: 32px !important;
   line-height: 50px !important;
   text-decoration: none !important;
@@ -85,11 +98,34 @@ footer i {
   margin: 0;
 }
 
+.jumbotron img {
+  text-align: center;
+  margin: 20px auto;
+  display: block;
+}
+
 .jumbotron h1 {
   font-weight: 100;
   color: white;
   letter-spacing: 4px;
   font-size: 32px;
+  text-transform: uppercase;
+}
+
+.jumbotron h2 {
+  font-weight: 100;
+  color: white;
+  letter-spacing: 4px;
+  font-size: 32px;
+  text-align: center;
+}
+
+.jumbotron h4 {
+  font-weight: 100;
+  color: white;
+  letter-spacing: 2px;
+  font-size: 14px;
+  text-align: center;
   text-transform: uppercase;
 }
 

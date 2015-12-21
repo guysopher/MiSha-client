@@ -1,5 +1,12 @@
-<div class="jumbotron" ng-if="!selectedUser">
-  <h1>GOODMORNING {{username}}, WHO DO YOU WANT TO VISIT?</h1>
+<div class="jumbotron" ng-if="!start">
+  <img src="images/white-81x85.png"/>
+  <h2 style="font-family:'belinda'">misha.m</h2>
+  <h4>NEVER NEEDLESSLY WALK AGAIN</h4>
+  <button class="message-person blue" ng-click="start()">SEARCH NOW</button>
+</div>
+
+<div class="jumbotron" ng-if="started && !selectedUser">
+  <h1>GOOD MORNING {{username}}, WHO DO YOU WANT TO VISIT?</h1>
   <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
          typeahead-popup-template-url="customPopupTemplate.html"
@@ -7,7 +14,7 @@
   <span locked class="form-control search-person" ng-if="!users.length" >Loading...</span>
 </div>
 
-<div class="jumbotron" ng-if="selectedUser">
+<div class="jumbotron" ng-if="started && selectedUser">
   <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN STOP BY NOW.</h1>
 
   <h1 ng-if="appState != 'available'" title="{{me.reason}}">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} ISN'T AVAILABLE.</h1>
@@ -31,17 +38,13 @@
   </div>
 </div>
 
-<footer>
-  <span ng-click="clearSelectedUser()">
-    MISHA.M
+<footer ng-if="started">
+  <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}">
+    You're {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
   </span>
-  <a ng-if="!selectedUser" ng-click="toggleBusy()" class="{{me.status}}" title="{{me.reason}}">
-    {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
-    <!--<i class="fa fa-{{me.status=='busy' ? 'ban' : 'check-circle-o'}}"></i>-->
-  </a>
-  <div ng-if="selectedUser" class="rate {{badge}}" ng-init="rate()"></div>
+  <i ng-click="toggleBusy()" title="{{me.reason}}" class="fa fa-{{(me.busy && me.busy != 'false') ? 'toggle-on fa-flip-horizontal red' : (me.status=='available' ? 'toggle-on green' : 'toggle-on yellow')}}"></i>
+  <!--<div ng-if="selectedUser" class="rate {{badge}}" ng-init="rate()"></div>-->
 </footer>
-
 
 <script type="text/ng-template" id="customPopupTemplate.html">
   <div class="custom-popup-wrapper"
