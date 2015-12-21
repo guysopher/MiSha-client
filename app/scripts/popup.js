@@ -12,7 +12,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   }).otherwise({
     redirectTo: '/'
   });
-}]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', '$timeout', function ($scope, $resource, $timeout) {
+}]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', '$timeout', '$interval', function ($scope, $resource, $timeout, $interval) {
   var bg = chrome.extension.getBackgroundPage();
 
   var api = bg.api;
@@ -30,8 +30,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     $scope.username = bg && bg.me && bg.me.name && bg.me.name.split(' ')[0];
     $scope.users = bg.users;
   }
+
   refreshUsers();
-  setInterval(refreshUsers, bg.seenInterval);
+  $interval(refreshUsers, bg.seenInterval);
 
   $scope.toggleBusy = function () {
     if (!$scope.me) return;
@@ -47,7 +48,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.invite = function () {
     if (!$scope.selectedUser) return;
-    User.save({ userId: 'invite' }, { email: $scope.selectedUser.email, name: $scope.selectedUser.name });
+    User.save({ userId: 'invite' }, { from: $scope.me.email, to: $scope.selectedUser.email, name: $scope.selectedUser.name });
     $scope.clearSelectedUser();
   };
 
@@ -98,6 +99,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.selectUser = function (user) {
     $scope.selectedUser = user;
     $scope.appState = isAvailable(user) ? 'available' : 'busy';
+    User.get({ userId: user.id }, function (res) {
+      $scope.selectedUser = res;
+    });
   };
 
   $scope.getLargeImage = function (url) {

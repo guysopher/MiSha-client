@@ -5,6 +5,9 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
+var api = 'http://misha-api.herokuapp.com';;
+//var api = 'http://localhost:1337';
+
 function isDevMode() {
   return !('update_url' in chrome.runtime.getManifest());
 }
@@ -22,10 +25,6 @@ var notifs = [];
 var MAX_PER_DAY = 60 * 60 * 8;
 var MAX_PER_WEEK = MAX_PER_DAY * 5;
 
-var User = $resource(api + '/user/:userId', { userId: '@id' }, {
-  'update': { method: 'PUT' }
-});
-
 var checkBusyCalendar = function checkBusyCalendar() {
   if (me && me.email) {
     chrome.identity.getAuthToken({ 'interactive': true, scopes: ['https://www.googleapis.com/auth/calendar'] }, function (token) {
@@ -41,7 +40,16 @@ var checkBusyCalendar = function checkBusyCalendar() {
           Authorization: 'OAuth ' + token
         }
       }).done(function (data) {
-        busyCalender = data && data.items && data.items.length > 0;
+        busyCalender = false;
+        if (data && data.items && data.items.length > 0) {
+          for (var i = 0; i < data.items.length; i++) {
+            if (data.items[i].transparency != "transparent") {
+              busyCalender = true;
+              break;
+            }
+          }
+        }
+
         console.log('busy calender result is: ', busyCalender);
       });
     });
@@ -82,10 +90,13 @@ var calculateRate = function calculateRate(ratesByDays, today, tomorrow) {
 };
 
 function refreshUsers() {
-  User.query({ limit: 2000 }, function (res) {
+  $.get(api + '/user?limit=2000', function (res) {
     users = res;
   });
 }
+
+refreshUsers();
+setInterval(refreshUsers, 15 * 60 * 1000);
 
 var seenLoop = function seenLoop() {
 
@@ -104,14 +115,13 @@ var seenLoop = function seenLoop() {
   me.rate = calculateRate(me.rateByDay, today, tomorrow);
 
   me.status = me.status || 'available';
-
-  refreshUsers();
+  chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
 
   //if the user status is not busy - make sure he's not away
   if (me.busy && me.busy != "false") {
-    chrome.browserAction.setBadgeText({ text: 'busy' });
+    chrome.browserAction.setBadgeText({ text: 'BUSY' });
   } else {
-    chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free') });
+    chrome.browserAction.setBadgeText({ text: me.status.replace('available', 'free').toUpperCase() });
     if (typeof me.reasons == 'undefined') me.reasons = {};
 
     //if not charging - set as away

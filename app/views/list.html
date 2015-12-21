@@ -4,7 +4,7 @@
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
          typeahead-popup-template-url="customPopupTemplate.html"
          typeahead-on-select="selectUser($item, $model, $label)">
-  <div ng-if="users.length == 0">Loading...</div>
+  <span locked class="form-control search-person" ng-if="!users.length" >Loading...</span>
 </div>
 
 <div class="jumbotron" ng-if="selectedUser">
