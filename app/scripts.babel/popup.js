@@ -190,16 +190,12 @@ angular
     }
 
     $scope.rate = function(selectedUser) {
-      switch (selectedUser) {
-        case selectedUser.rank:
-          $scope.badge = 'king';
-          break;
-        case 1:
-          $scope.badge = 'wixer';
-          break;
-        case 2:
-          $scope.badge = 'mega-kaker';
-          break;
+      if (selectedUser.rate < 0.5) {
+        $scope.badge = 'mega-kaker';
+      } else if (selectedUser.rate < 0.7) {
+        $scope.badge = 'wixer';
+      } else { //(selectedUser.rate > 0.7)
+        $scope.badge = 'king';
       }
     }
 

@@ -166,17 +166,14 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     return now - lastSeen < bg.awayDuration ? 'available' : 'busy';
   }
 
-  $scope.rate = function () {
-    switch (Math.floor(Math.random() * 3)) {
-      case 0:
-        $scope.badge = 'king';
-        break;
-      case 1:
-        $scope.badge = 'wixer';
-        break;
-      case 2:
-        $scope.badge = 'mega-kaker';
-        break;
+  $scope.rate = function (selectedUser) {
+    if (selectedUser.rate < 0.5) {
+      $scope.badge = 'king';
+    } else if (selectedUser.rate < 0.7) {
+      $scope.badge = 'wixer';
+    } else {
+      //(selectedUser.rate > 0.7)
+      $scope.badge = 'mega-kaker';
     }
   };
 

@@ -77,7 +77,7 @@
   </span>
   <i ng-click="toggleBusy()" title="{{me.reason}}"
      class="fa fa-{{(me.busy && me.busy != 'false') ? 'toggle-on fa-flip-horizontal red' : (me.status=='available' ? 'toggle-on green' : 'toggle-on yellow')}}"></i>
-  <div ng-if="selectedUser" class="rate {{badge}}" ng-init="rate(selectedUser)"></div>
+  <!--<div ng-if="selectedUser" class="rate {{badge}}" ng-init="rate(selectedUser)"></div>-->
 </footer>
 
 <script type="text/ng-template" id="customPopupTemplate.html">
