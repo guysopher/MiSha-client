@@ -42,7 +42,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
       return 'NIGHT';
     } else if (nowHour < 12) {
       return 'MORNING';
-    } else if (nowHour < 18) {
+    } else if (nowHour < 17) {
+      return 'AFTERNOON';
+    } else if (nowHour < 21) {
       return 'EVENING';
     } else {
       return 'NIGHT';
@@ -54,25 +56,6 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     $scope.username = bg && bg.me && bg.me.name && bg.me.name.split(' ')[0];
     $scope.users = bg.users;
   }
-
-  refreshUsers();
-  $interval(refreshUsers, bg.seenInterval);
-
-  $scope.toggleBusy = function () {
-    if (!$scope.me) return;
-    $scope.me.busy = !$scope.me.busy;
-    if ($scope.me.busy) {
-      $scope.imBusy = true;
-      $scope.appState = 'busy';
-      chrome.browserAction.setIcon({ 'path': api + '/images/icons/red.png' });
-    } else {
-      $scope.imBusy = false;
-      $scope.appState = '';
-      chrome.browserAction.setIcon({ 'path': api + '/images/icons/' + ($scope.me.status == 'available' ? 'green' : 'yellow') + '.png' });
-    }
-
-    User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
-  };
 
   $scope.hideHeader = function () {
     var ele = $('h1');
@@ -201,6 +184,29 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     if (!state) state = $scope.appState;
     return state == 'busy' ? 'red' : state == 'available' ? 'green' : 'yellow';
   };
+
+  $scope.toggleBusy = function (state) {
+    if (!$scope.me) return;
+    if (!state) state = !$scope.me.busy;
+
+    $scope.me.busy = state;
+    if ($scope.me.busy) {
+      $scope.imBusy = true;
+      $scope.clearSelectedUser();
+      $scope.appState = 'busy';
+      chrome.browserAction.setIcon({ 'path': api + '/images/icons/red.png' });
+    } else {
+      $scope.imBusy = false;
+      $scope.appState = '';
+      chrome.browserAction.setIcon({ 'path': api + '/images/icons/' + ($scope.me.status == 'available' ? 'green' : 'yellow') + '.png' });
+    }
+
+    User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
+  };
+
+  refreshUsers();
+  $scope.toggleBusy($scope.me.busy);
+  $interval(refreshUsers, bg.seenInterval);
 }]);
 
 //  "client_id_prod": "1051518271202-64fst397g2iqr3sahpvb8iohofi3t289.apps.googleusercontent.com",

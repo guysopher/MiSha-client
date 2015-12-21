@@ -75,25 +75,6 @@ angular
       $scope.users = bg.users;
     }
 
-    refreshUsers();
-    $interval(refreshUsers, bg.seenInterval);
-
-    $scope.toggleBusy = function() {
-      if (!$scope.me) return;
-      $scope.me.busy = !$scope.me.busy;
-      if ($scope.me.busy) {
-        $scope.imBusy = true;
-        $scope.appState = 'busy';
-        chrome.browserAction.setIcon({'path': api + '/images/icons/red.png'})
-      } else {
-        $scope.imBusy = false;
-        $scope.appState = '';
-        chrome.browserAction.setIcon({'path': api + '/images/icons/' + ($scope.me.status=='available' ? 'green' : 'yellow') + '.png'})
-      }
-
-      User.update({userId: $scope.me.id}, {busy: $scope.me.busy});
-    };
-
     $scope.hideHeader = function() {
       var ele = $('h1');
       var h = ele.height();
@@ -226,6 +207,31 @@ angular
       if (!state) state = $scope.appState;
       return (state =='busy' ? 'red' : (state == 'available' ? 'green' : 'yellow'));
     }
+
+
+    $scope.toggleBusy = function(state) {
+      if (!$scope.me) return;
+      if (!state) state = !$scope.me.busy;
+
+      $scope.me.busy = state;
+      if ($scope.me.busy) {
+        $scope.imBusy = true;
+        $scope.clearSelectedUser();
+        $scope.appState = 'busy';
+        chrome.browserAction.setIcon({'path': api + '/images/icons/red.png'})
+      } else {
+        $scope.imBusy = false;
+        $scope.appState = '';
+        chrome.browserAction.setIcon({'path': api + '/images/icons/' + ($scope.me.status=='available' ? 'green' : 'yellow') + '.png'})
+      }
+
+      User.update({userId: $scope.me.id}, {busy: $scope.me.busy});
+    };
+
+    refreshUsers();
+    $scope.toggleBusy($scope.me.busy);
+    $interval(refreshUsers, bg.seenInterval);
+
 
   }]);
 

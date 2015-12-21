@@ -1,4 +1,4 @@
-<div class="jumbotron" ng-if="started !== true">
+<div class="jumbotron" ng-if="started !== true" ng-cloak>
   <img class="main-page" src="images/white-81x85.png"/>
 
   <h2 style="font-family:'belinda'">misha.m</h2>
@@ -6,7 +6,7 @@
   <button class="message-person blue" ng-click="start()" ng-if="started != 'init' " >SEARCH NOW</button>
 </div>
 
-<div class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusy">
+<div class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusy" ng-cloak>
   <img src="images/icons/blue.png"/>
 
   <h1>GOOD {{timeOfDay}} {{username}}, WHO DO YOU WANT TO VISIT?</h1>
@@ -19,15 +19,13 @@
   <span locked class="form-control search-person" ng-if="!users.length">Loading...</span>
 </div>
 
-<div class="jumbotron" ng-if="started && !selectedUser && imBusy">
+<div class="jumbotron" ng-if="(started===true) && imBusy" ng-cloak>
   <img src="images/icons/red.png"/>
-
-
-  <h1>{{appState}} busy people can't visit others. change your status to use misha</h1>
+  <h1>busy people can't visit others. change your status to use misha</h1>
 
 </div>
 
-<div class="jumbotron" ng-if="started && selectedUser">
+<div class="jumbotron" ng-if="(started===true) && selectedUser && !imBusy" ng-cloak>
   <img ng-if="appState == 'available'" src="images/icons/green.png" ng-click="clearSelectedUser()"/>
 
   <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name.split(' ')[0]}} IS AVAILABLE. YOU CAN STOP BY NOW.</h1>
@@ -53,7 +51,7 @@
   <i class="fa fa-plus" ng-click="toggleDetails()" ng-class="{x: detailed}"></i>
 </div>
 
-<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser" ng-class="{up: detailed}">
+<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser && !imBusy" ng-class="{up: detailed}">
 
   <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank"
      ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}" title="{{me.rate}}"></a>
@@ -67,13 +65,13 @@
   </ul>
 </div>
 
-<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser" ng-class="{up: showSuccess}">
+<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser && !imBusy" ng-class="{up: showSuccess}">
   <h1>
     great, <br/>misha will let you know once {{selectedUser.name.split(' ')[0]}} is available for your visit
   </h1>
 </div>
 
-<footer ng-if="started && me && me.status">
+<footer ng-if="(started===true) && me && me.status">
   <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}">
     You're {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
   </span>
