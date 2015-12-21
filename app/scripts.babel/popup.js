@@ -225,9 +225,10 @@ angular
     };
 
     refreshUsers();
-    $scope.toggleBusy($scope.me.busy);
     $interval(refreshUsers, bg.seenInterval);
 
+
+    $scope.toggleBusy(bg && bg.me && bg.me.busy);
 
   }]);
 

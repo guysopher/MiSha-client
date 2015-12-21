@@ -267,4 +267,6 @@ chrome.identity.getProfileUserInfo(function (res) {
     //  });
   }
 });
+
+chrome.browserAction.setIcon({ 'path': api + '/images/icons/blue.png' });
 //# sourceMappingURL=background.js.map
