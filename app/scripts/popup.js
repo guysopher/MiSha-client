@@ -118,7 +118,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     $scope.showSuccess = true;
     $timeout(function () {
       window.close();
-    }, 7000);
+    }, 5500);
   };
 
   $scope.clearSelectedUser = function () {

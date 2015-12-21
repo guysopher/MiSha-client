@@ -215,7 +215,7 @@ var seenLoop = function seenLoop() {
 
         chrome.notifications.create('temp', {
           type: "basic",
-          iconUrl: "images/icon-128.png",
+          iconUrl: res.user.photo_url.replace('thumb_small', 'original'),
           title: res.user,
           message: res.message,
           expandedMessage: " Expanded message"
