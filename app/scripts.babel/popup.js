@@ -189,9 +189,9 @@ angular
       return ((now - lastSeen) < (bg.awayDuration))? 'available': 'busy';
     }
 
-    $scope.rate = function() {
-      switch (Math.floor(Math.random() * 3)) {
-        case 0:
+    $scope.rate = function(selectedUser) {
+      switch (selectedUser) {
+        case selectedUser.rank:
           $scope.badge = 'king';
           break;
         case 1:
