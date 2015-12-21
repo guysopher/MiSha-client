@@ -173,7 +173,7 @@ angular
 
       lastSeen = (new Date(Number(user.last_seen))).getTime();
 
-      return ((now - lastSeen) < (bg.awayDuration));
+      return ((now - lastSeen) < (bg.awayDuration * 1000));
     }
 
     function getUserAvailability(user) {
@@ -186,7 +186,7 @@ angular
 
       lastSeen = (new Date(Number(user.last_seen))).getTime();
 
-      return ((now - lastSeen) < (bg.awayDuration))? 'available': 'busy';
+      return ((now - lastSeen) < (bg.awayDuration * 1000))? 'available': 'busy';
     }
 
     $scope.rate = function(selectedUser) {
