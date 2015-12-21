@@ -11,7 +11,7 @@
 
   <h1>GOOD {{timeOfDay}} {{username}}, WHO DO YOU WANT TO VISIT?</h1>
   <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser"
-         ng-change="hideHeader()" placeholder=""
+         ng-change="hideHeader()" placeholder="Type a wixer's name"
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
          typeahead-min-length="2"
          typeahead-popup-template-url="customPopupTemplate.html"
@@ -38,7 +38,7 @@
 
   <h1 ng-if="appState == 'busy'" title="{{me.reason}}">OOOPS... <br/> LOOKS LIKE {{selectedUser.name.split(' ')[0]}} IS BUSY AT THE MOMENT</h1>
 
-  <button ng-if="appState == 'available'" class="message-person {{appStateColor()}}" ng-click="sendMessage(false, 'I`m coming')">
+  <button ng-if="appState == 'available'" class="message-person {{appStateColor()}}" ng-click="sendMessage(false)">
     I'm on my way!
   </button>
   <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person {{appStateColor()}}"
