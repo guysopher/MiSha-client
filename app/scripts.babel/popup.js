@@ -82,8 +82,12 @@ angular
       if (!$scope.me) return;
       $scope.me.busy = !$scope.me.busy;
       if ($scope.me.busy) {
+        $scope.imBusy = true;
+        $scope.appState = 'busy';
         chrome.browserAction.setIcon({'path': api + '/images/icons/red.png'})
       } else {
+        $scope.imBusy = false;
+        $scope.appState = '';
         chrome.browserAction.setIcon({'path': api + '/images/icons/' + ($scope.me.status=='available' ? 'green' : 'yellow') + '.png'})
       }
 
@@ -114,7 +118,7 @@ angular
     $scope.invite = function() {
       if (!$scope.selectedUser) return;
       User.save({userId: 'invite'}, {from: $scope.me.email, to: $scope.selectedUser.email, name: $scope.selectedUser.name});
-      $scope.clearSelectedUser();
+      $scope.successAndClose();
     };
 
     $scope.notifyMe = function(userId) {
@@ -124,18 +128,21 @@ angular
       var notify = new Pending({
         user_id: $scope.me.id,
         waiting_for: userId,
-        message: 'is now available!'
+        message: "I've returned to my desk, you can come over!"
       });
       notify.$save(function(data) {
         if(data && data.$resolved) {
-          $scope.successAndClose();
         }
       });
+
+      $scope.successAndClose();
     };
 
     $scope.sendMessage = function(userId, message) {
-      if (!userId) userId = $scope.selectedUser.id;
       if (!$scope.me) return;
+
+      if (!message) message = "Get ready... I'm coming (to your desk)";
+      if (!userId) userId = $scope.selectedUser.id;
 
       var notify = new Pending({
         user_id: userId,
@@ -143,17 +150,17 @@ angular
         message: message
       });
       notify.$save(function(data){
-        if(data && data.$resolved) {
-          $scope.successAndClose();
-        }
       });
+
+      $scope.successAndClose();
+
     }
 
     $scope.successAndClose = function() {
       $scope.showSuccess = true;
       $timeout(function() {
         window.close();
-      }, 3000);
+      }, 7000);
     }
 
     $scope.clearSelectedUser = function() {
@@ -189,14 +196,12 @@ angular
     }
 
     function getUserAvailability(user) {
-      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen') ||
-           user.busy && user.busy != 'false') return 'busy';
+      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return 'away';
+      if (user.busy && user.busy != 'false') return 'busy';
       if (!user.status || user.status == 'away') return 'away';
 
       var now = (new Date()).getTime();
       var lastSeen;
-
-      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
 
       lastSeen = (new Date(Number(user.last_seen))).getTime();
 

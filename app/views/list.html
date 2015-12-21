@@ -6,7 +6,7 @@
   <button class="message-person blue" ng-click="start()" ng-if="started != 'init' " >SEARCH NOW</button>
 </div>
 
-<div class="jumbotron" ng-if="(started === true) && !selectedUser">
+<div class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusy">
   <img src="images/icons/blue.png"/>
 
   <h1>GOOD {{timeOfDay}} {{username}}, WHO DO YOU WANT TO VISIT?</h1>
@@ -19,28 +19,35 @@
   <span locked class="form-control search-person" ng-if="!users.length">Loading...</span>
 </div>
 
+<div class="jumbotron" ng-if="started && !selectedUser && imBusy">
+  <img src="images/icons/red.png"/>
+
+
+  <h1>{{appState}} busy people can't visit others. change your status to use misha</h1>
+
+</div>
+
 <div class="jumbotron" ng-if="started && selectedUser">
   <img ng-if="appState == 'available'" src="images/icons/green.png" ng-click="clearSelectedUser()"/>
 
-  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name.split(' ')[0]}} IS HERE. YOU CAN STOP BY NOW.</h1>
+  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name.split(' ')[0]}} IS AVAILABLE. YOU CAN STOP BY NOW.</h1>
 
   <img ng-if="appState == 'away'" src="images/icons/yellow.png" ng-click="clearSelectedUser()"/>
 
-  <h1 ng-if="appState == 'away'">LOOKS LIKE {{selectedUser.name.split(' ')[0]}} ISN'T AT THEIR DESK AT THE MOMENT.</h1>
+  <h1 ng-if="appState == 'away'">SAVE YOUR LEGS. {{selectedUser.name.split(' ')[0]}} ISN'T AVAILABLE RIGHT NOW.</h1>
 
   <img ng-if="appState == 'busy'" src="images/icons/red.png" ng-click="clearSelectedUser()"/>
 
-  <h1 ng-if="appState == 'busy'" title="{{me.reason}}">OOOPS... <br/> LOOKS LIKE {{selectedUser.name.split(' ')[0]}} IS
-    BUSY AT THE MOMENT</h1>
+  <h1 ng-if="appState == 'busy'" title="{{me.reason}}">OOOPS... <br/> LOOKS LIKE {{selectedUser.name.split(' ')[0]}} IS BUSY AT THE MOMENT</h1>
 
-  <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
+  <button ng-if="appState == 'available'" class="message-person {{appStateColor()}}" ng-click="sendMessage(false, 'I`m coming')">
     I'm on my way!
   </button>
-  <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person busy"
+  <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person {{appStateColor()}}"
           ng-click="notifyMe(false)">Notify when available
   </button>
-  <button ng-if="!selectedUser.last_seen && appState != 'available'" class="message-person busy"
-          ng-click="invite(false)">Invite
+  <button ng-if="!selectedUser.last_seen && appState != 'available'" class="message-person {{appStateColor()}}"
+          ng-click="invite(false)">Notify when available
   </button>
 
   <i class="fa fa-plus" ng-click="toggleDetails()" ng-class="{x: detailed}"></i>
@@ -58,6 +65,12 @@
     <li ng-show="selectedUser.email"><a target="_blank"
                                         ng-href="mailto:{{selectedUser.email}}">{{selectedUser.email}}</a></li>
   </ul>
+</div>
+
+<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser" ng-class="{up: showSuccess}">
+  <h1>
+    great, <br/>misha will let you know once {{selectedUser.name.split(' ')[0]}} is available for your visit
+  </h1>
 </div>
 
 <footer ng-if="started && me && me.status">
