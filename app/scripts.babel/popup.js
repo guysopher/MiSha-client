@@ -53,7 +53,9 @@ angular
         return 'NIGHT';
       } else if (nowHour < 12) {
         return 'MORNING';
-      } else if (nowHour < 18) {
+      } else if (nowHour < 17) {
+        return 'AFTERNOON';
+      } else if (nowHour < 21) {
         return 'EVENING';
       } else {
         return 'NIGHT';
