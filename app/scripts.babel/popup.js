@@ -228,7 +228,9 @@ angular
     $interval(refreshUsers, bg.seenInterval);
 
 
-    $scope.toggleBusy(bg && bg.me && bg.me.busy);
+    if (bg && bg.me && bg.me.busy && bg.me.busy!="false") {
+      $scope.toggleBusy(true);
+    }
 
   }]);
 

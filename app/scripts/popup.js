@@ -204,7 +204,9 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   refreshUsers();
   $interval(refreshUsers, bg.seenInterval);
 
-  $scope.toggleBusy(bg && bg.me && bg.me.busy);
+  if (bg && bg.me && bg.me.busy && bg.me.busy != "false") {
+    $scope.toggleBusy(true);
+  }
 }]);
 
 //  "client_id_prod": "1051518271202-64fst397g2iqr3sahpvb8iohofi3t289.apps.googleusercontent.com",
