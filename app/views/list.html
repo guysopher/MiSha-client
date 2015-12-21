@@ -48,7 +48,7 @@
           ng-click="invite(false)">Notify when available
   </button>
 
-  <i class="fa fa-plus" ng-click="toggleDetails()" ng-class="{x: detailed}"></i>
+  <i ng-if="!showSuccess" class="fa fa-plus" ng-click="toggleDetails()" ng-class="{x: detailed}"></i>
 </div>
 
 <div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser && !imBusy" ng-class="{up: detailed}">
