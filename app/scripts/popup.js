@@ -26,6 +26,21 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.users = [];
   $scope.started = localStorage['start'];
   $scope.detailed = false;
+  $scope.timeOfDay = calculateTimeOfDay();
+
+  function calculateTimeOfDay() {
+    var now = new Date();
+    var nowHour = now.getHours();
+    if (nowHour < 5) {
+      return 'NIGHT';
+    } else if (nowHour < 12) {
+      return 'MORNING';
+    } else if (nowHour < 18) {
+      return 'EVENING';
+    } else {
+      return 'NIGHT';
+    }
+  }
 
   function refreshUsers() {
     $scope.me = bg && bg.me;

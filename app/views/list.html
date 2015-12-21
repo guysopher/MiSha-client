@@ -9,7 +9,7 @@
 <div class="jumbotron" ng-if="started && !selectedUser">
   <img src="images/icons/blue.png"/>
 
-  <h1>GOOD MORNING {{username}}, WHO DO YOU WANT TO VISIT?</h1>
+  <h1>GOOD {{timeOfDay}} {{username}}, WHO DO YOU WANT TO VISIT?</h1>
   <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser"
          ng-change="hideHeader()" placeholder=""
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
