@@ -4,6 +4,20 @@
   green: #50D086;
 */
 
+.red {
+  color: #EF4F3F;
+}
+.blue {
+  color: #6EA8F1;
+}
+.green {
+  color: #50D086;
+}
+.yellow {
+  color: #F5C523;
+}
+
+
 body {
   padding: 0;
 }
@@ -34,33 +48,34 @@ body {
 
 footer {
   position: absolute;
-  left: 40px;
-  bottom: 30px;
-  width: calc(100% - 80px);
+  z-index: 10000;
+  left: 0;
+  bottom: 0;
+  padding: 0 30px;
+  line-height: 50px;
+  width: 100%;
+  background: white;
 }
 
 footer span {
   float: left;
   color: white;
   font-weight: 100;
-  font-size: 21px;
+  font-size: 16px;
   letter-spacing: 4px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
-footer a {
+footer i {
   float: right;
+  text-align: center;
   font-weight: 100;
-  font-size: 21px;
-  letter-spacing: 4px;
+  font-size: 32px !important;
+  line-height: 50px !important;
   text-decoration: none !important;
   text-transform: uppercase;
-  color: white !important;
   cursor: pointer;
-}
-
-footer a i {
-  font-size: 28px !important;
 }
 
 .jumbotron {
