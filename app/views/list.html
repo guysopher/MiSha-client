@@ -1,5 +1,5 @@
 <div class="jumbotron" ng-if="!selectedUser">
-  <h1>{{username}}, WHO DO YOU WANT TO VISIT?</h1>
+  <h1>GOODMORNING {{username}}, WHO DO YOU WANT TO VISIT?</h1>
   <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
          typeahead-popup-template-url="customPopupTemplate.html"
@@ -8,9 +8,9 @@
 </div>
 
 <div class="jumbotron" ng-if="selectedUser">
-  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN POP UP NOW.</h1>
+  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN STOP BY NOW.</h1>
 
-  <h1 ng-if="appState != 'available'" title="{{me.reason}}">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} IS POOPING.</h1>
+  <h1 ng-if="appState != 'available'" title="{{me.reason}}">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} ISN'T AVAILABLE.</h1>
   <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
     I'm on my way!
   </button>

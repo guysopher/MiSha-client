@@ -26,6 +26,12 @@ body {
 
 }
 
+
+.container.away {
+  background-color: #f4c521;
+
+}
+
 footer {
   position: absolute;
   left: 40px;

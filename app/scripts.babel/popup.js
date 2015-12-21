@@ -116,7 +116,8 @@ angular
 
     $scope.selectUser = function(user) {
       $scope.selectedUser = user;
-      $scope.appState = isAvailable(user) ? 'available' : 'busy';
+      //$scope.appState = isAvailable(user) ? 'available' : 'busy';
+      $scope.appState = getUserAvailability(user);
       User.get({userId: user.id}, function (res) {
         $scope.selectedUser = res;
       });
@@ -137,6 +138,21 @@ angular
       lastSeen = (new Date(Number(user.last_seen))).getTime();
 
       return ((now - lastSeen) < (bg.awayDuration));
+    }
+
+    function getUserAvailability(user) {
+      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen') ||
+           user.busy && user.busy != 'false') return 'busy';
+      if (!user.status || user.status == 'away') return 'away'
+
+      var now = (new Date()).getTime();
+      var lastSeen;
+
+      if (!user || !user.last_seen || !user.hasOwnProperty('last_seen')) return false;
+
+      lastSeen = (new Date(Number(user.last_seen))).getTime();
+
+      return ((now - lastSeen) < (bg.awayDuration))? 'available': 'busy';
     }
 
     $scope.rate = function() {
