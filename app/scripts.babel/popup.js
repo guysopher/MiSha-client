@@ -209,7 +209,7 @@ angular
       if (!$scope.me) return;
       if (!state) state = !$scope.me.busy;
 
-      $scope.me.busy = state;
+      $scope.me.busy = state && state != "false";
       if ($scope.me.busy) {
         $scope.imBusy = true;
         $scope.clearSelectedUser();

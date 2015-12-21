@@ -168,12 +168,12 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.rate = function (selectedUser) {
     if (selectedUser.rate < 0.5) {
-      $scope.badge = 'king';
+      $scope.badge = 'mega-kaker';
     } else if (selectedUser.rate < 0.7) {
       $scope.badge = 'wixer';
     } else {
       //(selectedUser.rate > 0.7)
-      $scope.badge = 'mega-kaker';
+      $scope.badge = 'king';
     }
   };
 
@@ -186,7 +186,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     if (!$scope.me) return;
     if (!state) state = !$scope.me.busy;
 
-    $scope.me.busy = state;
+    $scope.me.busy = state && state != "false";
     if ($scope.me.busy) {
       $scope.imBusy = true;
       $scope.clearSelectedUser();
