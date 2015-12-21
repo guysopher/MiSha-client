@@ -25,6 +25,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.username = "Hi";
   $scope.users = [];
   $scope.started = localStorage['start'];
+  $scope.detailed = false;
 
   function refreshUsers() {
     $scope.me = bg && bg.me;
@@ -47,8 +48,23 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
   };
 
-  $scope.started = function () {
+  $scope.hideHeader = function () {
+    var ele = $('h1');
+    var h = ele.height();
+    ele.css('height', h + 'px');
+    $timeout(function () {
+      ele.css('height', 0).css('padding', 0).css('margin', 0);
+    });
+  };
+
+  $scope.start = function () {
     localStorage['started'] = true;
+    $scope.started = true;
+  };
+
+  $scope.toggleDetails = function (state) {
+    if (!state) state = !$scope.detailed;
+    $scope.detailed = state;
   };
 
   $scope.invite = function () {
@@ -99,6 +115,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   $scope.clearSelectedUser = function () {
     $scope.selectedUser = '';
     $scope.appState = '';
+    $scope.detailed = false;
   };
 
   $scope.selectUser = function (user) {
@@ -153,6 +170,11 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
         $scope.badge = 'mega-kaker';
         break;
     }
+  };
+
+  $scope.appStateColor = function (state) {
+    if (!state) state = $scope.appState;
+    return state == 'busy' ? 'red' : state == 'available' ? 'green' : 'yellow';
   };
 }]);
 

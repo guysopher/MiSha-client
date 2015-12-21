@@ -1,48 +1,74 @@
-<div class="jumbotron" ng-if="!start">
-  <img src="images/white-81x85.png"/>
+<div class="jumbotron" ng-if="!started">
+  <img class="main-page" src="images/white-81x85.png"/>
+
   <h2 style="font-family:'belinda'">misha.m</h2>
   <h4>NEVER NEEDLESSLY WALK AGAIN</h4>
   <button class="message-person blue" ng-click="start()">SEARCH NOW</button>
 </div>
 
 <div class="jumbotron" ng-if="started && !selectedUser">
+  <img src="images/icons/blue.png"/>
+
   <h1>GOOD MORNING {{username}}, WHO DO YOU WANT TO VISIT?</h1>
-  <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser" placeholder=""
+  <input ng-if="users.length > 0" autofocus class="form-control search-person" type="text" ng-model="selectedUser"
+         ng-change="hideHeader()" placeholder=""
          uib-typeahead="user as user.name for user in users| filter:{name:$viewValue}"
+         typeahead-min-length="2"
          typeahead-popup-template-url="customPopupTemplate.html"
          typeahead-on-select="selectUser($item, $model, $label)">
-  <span locked class="form-control search-person" ng-if="!users.length" >Loading...</span>
+  <span locked class="form-control search-person" ng-if="!users.length">Loading...</span>
 </div>
 
 <div class="jumbotron" ng-if="started && selectedUser">
-  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name}} IS HERE. YOU CAN STOP BY NOW.</h1>
+  <img ng-if="appState == 'available'" src="images/icons/green.png" ng-click="clearSelectedUser()"/>
 
-  <h1 ng-if="appState != 'available'" title="{{me.reason}}">DON'T BOTHER LOOKS LIKE {{selectedUser.name}} ISN'T AVAILABLE.</h1>
+  <h1 ng-if="appState == 'available'">YAY! <br/>{{selectedUser.name.split(' ')[0]}} IS HERE. YOU CAN STOP BY NOW.</h1>
+
+  <img ng-if="appState == 'away'" src="images/icons/yellow.png" ng-click="clearSelectedUser()"/>
+
+  <h1 ng-if="appState == 'away'">LOOKS LIKE {{selectedUser.name.split(' ')[0]}} ISN'T AT THEIR DESK AT THE MOMENT.</h1>
+
+  <img ng-if="appState == 'busy'" src="images/icons/red.png" ng-click="clearSelectedUser()"/>
+
+  <h1 ng-if="appState == 'busy'" title="{{me.reason}}">OOOPS... <br/> LOOKS LIKE {{selectedUser.name.split(' ')[0]}} IS
+    BUSY AT THE MOMENT</h1>
+
   <button ng-if="appState == 'available'" class="message-person available" ng-click="sendMessage(false, 'I`m coming')">
     I'm on my way!
   </button>
-  <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person busy" ng-click="notifyMe(false)">Notify when available
+  <button ng-if="selectedUser.last_seen && appState != 'available'" class="message-person busy"
+          ng-click="notifyMe(false)">Notify when available
   </button>
-  <button ng-if="!selectedUser.last_seen && appState != 'available'" class="message-person busy" ng-click="invite(false)">Invite
+  <button ng-if="!selectedUser.last_seen && appState != 'available'" class="message-person busy"
+          ng-click="invite(false)">Invite
   </button>
 
-  <div class="user-details">
-    <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank" ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}" title="{{me.rate}}"></a>
-    <ul class="user-texts">
-      <li><a ng-href="{{selectedUser.url}}" target="_blank" >{{selectedUser.name}}</a></li>
-      <li ng-show="selectedUser.title"><a>{{selectedUser.title}}</a></li>
-      <li ng-show="selectedUser.location"><a>{{selectedUser.location}}</a></li>
-      <li ng-show="selectedUser.phone"><a>{{selectedUser.phone}}</a></li>
-      <li ng-show="selectedUser.email"><a target="_blank" ng-href="mailto:{{selectedUser.email}}">{{selectedUser.email}}</a></li>
-    </ul>
-  </div>
+  <i class="fa fa-plus" ng-click="toggleDetails()" ng-class="{x: detailed}"></i>
+</div>
+
+<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser" ng-class="{up: detailed}">
+  <img ng-if="appState == 'available'" src="images/icons/green.png" ng-click="clearSelectedUser()"/>
+  <img ng-if="appState == 'away'" src="images/icons/yellow.png" ng-click="clearSelectedUser()"/>
+  <img ng-if="appState == 'busy'" src="images/icons/red.png" ng-click="clearSelectedUser()"/>
+
+  <a class="user-image" ng-href="{{selectedUser.url}}" target="_blank"
+     ng-style="{backgroundImage: 'url(' + getLargeImage(selectedUser.photo_url) + ')'}" title="{{me.rate}}"></a>
+  <ul class="user-texts">
+    <li class="name"><a ng-href="{{selectedUser.url}}" target="_blank">{{selectedUser.name}}</a></li>
+    <li ng-show="selectedUser.title"><a>{{selectedUser.title}}</a></li>
+    <li ng-show="selectedUser.location"><a>{{selectedUser.location}}</a></li>
+    <li ng-show="selectedUser.phone"><a>{{selectedUser.phone}}</a></li>
+    <li ng-show="selectedUser.email"><a target="_blank"
+                                        ng-href="mailto:{{selectedUser.email}}">{{selectedUser.email}}</a></li>
+  </ul>
 </div>
 
 <footer ng-if="started">
   <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}">
     You're {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
   </span>
-  <i ng-click="toggleBusy()" title="{{me.reason}}" class="fa fa-{{(me.busy && me.busy != 'false') ? 'toggle-on fa-flip-horizontal red' : (me.status=='available' ? 'toggle-on green' : 'toggle-on yellow')}}"></i>
+  <i ng-click="toggleBusy()" title="{{me.reason}}"
+     class="fa fa-{{(me.busy && me.busy != 'false') ? 'toggle-on fa-flip-horizontal red' : (me.status=='available' ? 'toggle-on green' : 'toggle-on yellow')}}"></i>
   <!--<div ng-if="selectedUser" class="rate {{badge}}" ng-init="rate()"></div>-->
 </footer>
 

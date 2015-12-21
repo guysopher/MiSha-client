@@ -43,6 +43,7 @@ angular
     $scope.username = "Hi";
     $scope.users = [];
     $scope.started = localStorage['start'];
+    $scope.detailed = false;
 
     function refreshUsers() {
       $scope.me = bg && bg.me;
@@ -65,8 +66,25 @@ angular
       User.update({userId: $scope.me.id}, {busy: $scope.me.busy});
     };
 
-    $scope.started = function() {
+    $scope.hideHeader = function() {
+      var ele = $('h1');
+      var h = ele.height();
+      ele.css('height', h + 'px');
+      $timeout(function() {
+        ele.css('height', 0)
+        .css('padding', 0)
+        .css('margin', 0);
+      });
+    }
+
+    $scope.start = function() {
       localStorage['started'] = true;
+      $scope.started = true;
+    }
+
+    $scope.toggleDetails = function(state) {
+      if (!state) state = !$scope.detailed;
+      $scope.detailed = state;
     }
 
     $scope.invite = function() {
@@ -117,6 +135,7 @@ angular
     $scope.clearSelectedUser = function() {
       $scope.selectedUser = '';
       $scope.appState = '';
+      $scope.detailed = false;
     }
 
     $scope.selectUser = function(user) {
@@ -148,7 +167,7 @@ angular
     function getUserAvailability(user) {
       if (!user || !user.last_seen || !user.hasOwnProperty('last_seen') ||
            user.busy && user.busy != 'false') return 'busy';
-      if (!user.status || user.status == 'away') return 'away'
+      if (!user.status || user.status == 'away') return 'away';
 
       var now = (new Date()).getTime();
       var lastSeen;
@@ -172,6 +191,11 @@ angular
           $scope.badge = 'mega-kaker';
           break;
       }
+    }
+
+    $scope.appStateColor = function(state) {
+      if (!state) state = $scope.appState;
+      return (state =='busy' ? 'red' : (state == 'available' ? 'green' : 'yellow'));
     }
 
   }]);
