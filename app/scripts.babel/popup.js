@@ -116,7 +116,7 @@ angular
         }
       });
 
-      $scope.successAndClose();
+      $scope.sendMessage();
     };
 
     $scope.sendMessage = function(userId, message) {

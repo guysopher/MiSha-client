@@ -95,7 +95,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
       if (data && data.$resolved) {}
     });
 
-    $scope.successAndClose();
+    $scope.sendMessage();
   };
 
   $scope.sendMessage = function (userId, message) {
