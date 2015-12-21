@@ -79,7 +79,7 @@
 
 <footer ng-if="(started===true) && me && me.status">
   <!--<a ng-href="{{me.url}}/edit" title="Edit your DaPulse profile" class="fa fa-fw fa-pencil" style="float:left;"></a>-->
-  <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}">
+  <span class="{{(me.busy && me.busy != 'false') ? 'red' : (me.status=='available' ? 'green' : 'yellow')}}" title="{{me.reason}}">
     I'm {{(me.busy && me.busy != "false") ? 'busy' : me.status}}
   </span>
   <i ng-click="toggleBusy()" title="{{me.reason}}"
