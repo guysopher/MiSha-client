@@ -65,7 +65,7 @@
   </ul>
 </div>
 
-<div class="jumbotron user-details bg-{{appStateColor()}}" ng-if="started && selectedUser && !imBusy" ng-class="{up: showSuccess}">
+<div class="jumbotron user-details bg-{{appStateColor()}}" style="z-index: 1100" ng-if="started && selectedUser && !imBusy" ng-class="{up: showSuccess}">
   <h1>
     great, <br/>misha will let you know once {{selectedUser.name.split(' ')[0]}} is available for your visit
   </h1>

@@ -16,10 +16,11 @@ var api = isDevMode() ? 'http://localhost:1337' : 'http://misha-api.herokuapp.co
 var me = undefined;
 var users = undefined;
 
-var seenInterval = 12 * 1000;
-var awayDuration = 2 * 60 * 1000;
+var seenInterval = 5 * 1000;
+var awayDuration = 1 * 60;
+var calenderCheckInterval = 2 * 60 * 1000;
+var refreshUsersInterval = 5 * 60 * 1000;
 
-var calenderCheckInterval = 5 * 60 * 1000;
 var busyCalender = false;
 var notifs = [];
 var MAX_PER_DAY = 60 * 60 * 8;
@@ -99,7 +100,7 @@ function refreshUsers() {
 }
 
 refreshUsers();
-setInterval(refreshUsers, 15 * 60 * 1000);
+setInterval(refreshUsers, refreshUsersInterval);
 
 var seenLoop = function seenLoop() {
 
@@ -156,7 +157,7 @@ var seenLoop = function seenLoop() {
     });
 
     //if chrome is idle for 2 minutes - set status as away
-    chrome.idle.queryState(2 * 60, function (res) {
+    chrome.idle.queryState(awayDuration, function (res) {
       console.log('Got Idle: ', res);
       if (res != 'active') {
         console.log("Chrome is idle");
