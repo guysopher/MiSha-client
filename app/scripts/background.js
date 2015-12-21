@@ -25,6 +25,8 @@ var notifs = [];
 var MAX_PER_DAY = 60 * 60 * 8;
 var MAX_PER_WEEK = MAX_PER_DAY * 5;
 
+var started = localStorage['started'];
+
 var checkBusyCalendar = function checkBusyCalendar() {
   if (me && me.email) {
     chrome.identity.getAuthToken({ 'interactive': true, scopes: ['https://www.googleapis.com/auth/calendar'] }, function (token) {

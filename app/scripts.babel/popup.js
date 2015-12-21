@@ -59,7 +59,7 @@ angular
       if ($scope.me.busy) {
         chrome.browserAction.setIcon({'path': api + '/images/icons/red.png'})
       } else {
-        chrome.browserAction.setIcon({'path': api + '/images/icons/' + (me.status=='available' ? 'green' : 'yellow') + '.png'})
+        chrome.browserAction.setIcon({'path': api + '/images/icons/' + ($scope.me.status=='available' ? 'green' : 'yellow') + '.png'})
       }
 
       User.update({userId: $scope.me.id}, {busy: $scope.me.busy});

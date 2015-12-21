@@ -24,6 +24,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
 
   $scope.username = "Hi";
   $scope.users = [];
+  $scope.started = localStorage['start'];
 
   function refreshUsers() {
     $scope.me = bg && bg.me;
@@ -40,10 +41,14 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     if ($scope.me.busy) {
       chrome.browserAction.setIcon({ 'path': api + '/images/icons/red.png' });
     } else {
-      chrome.browserAction.setIcon({ 'path': api + '/images/icons/' + (me.status == 'available' ? 'green' : 'yellow') + '.png' });
+      chrome.browserAction.setIcon({ 'path': api + '/images/icons/' + ($scope.me.status == 'available' ? 'green' : 'yellow') + '.png' });
     }
 
     User.update({ userId: $scope.me.id }, { busy: $scope.me.busy });
+  };
+
+  $scope.started = function () {
+    localStorage['started'] = true;
   };
 
   $scope.invite = function () {
