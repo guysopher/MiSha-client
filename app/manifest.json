@@ -13,8 +13,7 @@
     "scripts": [
       "scripts/jquery-2.1.4.js",
       "scripts/chromereload.js",
-      "scripts/background.js",
-      "scripts/gapi-client.js"
+      "scripts/background.js"
     ]
   },
   "permissions": [

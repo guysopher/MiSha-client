@@ -5,6 +5,8 @@
 //  console.log('previousVersion', details.previousVersion);
 //});
 
+var api = 'http://misha-api.herokuapp.com';;
+//var api = 'http://localhost:1337';
 
 function isDevMode() {
   return !('update_url' in chrome.runtime.getManifest());
@@ -12,6 +14,7 @@ function isDevMode() {
 
 var api = isDevMode() ? 'http://localhost:1337' : 'http://misha-api.herokuapp.com';
 var me = undefined;
+var users = undefined;
 
 var seenInterval = 12 * 1000;
 var awayDuration = 2 * 60 * 1000;
@@ -21,6 +24,10 @@ var busyCalender = false;
 var notifs = [];
 var MAX_PER_DAY = 60 * 60 * 8;
 var MAX_PER_WEEK = MAX_PER_DAY * 5;
+
+var User = $resource(api + '/user/:userId', { userId: '@id' }, {
+  'update': { method:'PUT' }
+});
 
 
 var checkBusyCalendar = function () {
@@ -79,10 +86,22 @@ var calculateRate = function (ratesByDays, today, tomorrow) {
   return total;
 }
 
+function refreshUsers() {
+  User.query({limit: 2000}, function (res) {
+    users = res;
+  });
+}
+
 var seenLoop = function () {
 
   var today = (new Date()).getDay();
   var tomorrow = ((new Date()).getDay() + 1) % 7;
+
+  if (!me.rate || !me.rateByDay) {
+    var defaultRate = 60 * 60 * 4; //four hours
+    me.rateByDay = [defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate];
+    me.rate = calculateRate(me.rateByDay, today, tomorrow);
+  }
 
   //clear next day data
   me.rateByDay[tomorrow] = 0;
@@ -90,7 +109,8 @@ var seenLoop = function () {
   me.rate = calculateRate(me.rateByDay, today, tomorrow);
 
   me.status =  me.status || 'available';
-  
+  chrome.browserAction.setBadgeText({text: me.status.replace('available', 'free')});
+
   //if the user status is not busy - make sure he's not away
   if (me.busy && me.busy != "false") {
     chrome.browserAction.setBadgeText({text: 'busy'});
@@ -201,15 +221,6 @@ var seenLoop = function () {
 }
 
 var initInterval = function () {
-
-  var defaultRate = 60 * 60 * 4; //four hours
-
-  if (!me.rate) {
-    me.rateByDay = [defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate, defaultRate];
-    var today = (new Date()).getDay();
-    var tomorrow = ((new Date()).getDay() + 1) % 7;
-    me.rate = calculateRate(me.rateByDay, today, tomorrow);
-  }
   setInterval(seenLoop, seenInterval);
   seenLoop();
 }
@@ -222,16 +233,6 @@ var getUserIdFromEmail = function (email) {
 
     setInterval(checkBusyCalendar, calenderCheckInterval);
     checkBusyCalendar();
-  });
-}
-
-
-
-var refreshUser = function (user) {
-  return;
-  $.get(api + '/user/?id=' + user.id, function (res) {
-    me = res;
-    console.log('Got User:', me);
   });
 }
 

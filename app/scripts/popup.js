@@ -12,7 +12,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   }).otherwise({
     redirectTo: '/'
   });
-}]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', '$http', function ($scope, $resource) {
+}]).controller('UserCtrl', ['$scope', '$resource', function ($scope, $resource) {}]).controller('ListCtrl', ['$scope', '$resource', '$timeout', function ($scope, $resource, $timeout) {
   var bg = chrome.extension.getBackgroundPage();
 
   var api = bg.api;
@@ -28,10 +28,7 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
   function refreshUsers() {
     $scope.me = bg && bg.me;
     $scope.username = bg && bg.me && bg.me.name && bg.me.name.split(' ')[0];
-    User.query({ limit: 2000 }, function (res) {
-      $scope.users = res;
-      chrome.storage.local.set({ 'users': res });
-    });
+    $scope.users = bg.users;
   }
   refreshUsers();
   setInterval(refreshUsers, bg.seenInterval);
@@ -63,8 +60,11 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
       waiting_for: userId,
       message: 'is now available!'
     });
-    notify.$save();
-    $scope.clearSelectedUser();
+    notify.$save(function (data) {
+      if (data && data.$resolved) {
+        $scope.successAndClose();
+      }
+    });
   };
 
   $scope.sendMessage = function (userId, message) {
@@ -78,10 +78,16 @@ angular.module('misha', ['ui.bootstrap.typeahead', 'ngAnimate', 'ngCookies', 'ng
     });
     notify.$save(function (data) {
       if (data && data.$resolved) {
-        $scope.clearSelectedUser();
-        window.close();
+        $scope.successAndClose();
       }
     });
+  };
+
+  $scope.successAndClose = function () {
+    $scope.showSuccess = true;
+    $timeout(function () {
+      window.close();
+    }, 3000);
   };
 
   $scope.clearSelectedUser = function () {
