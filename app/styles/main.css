@@ -89,7 +89,7 @@ footer span {
   float: left;
   color: white;
   font-size: 16px;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   cursor: pointer;
   text-transform: uppercase;
   margin-bottom: -2px;
@@ -128,7 +128,7 @@ footer i {
 .jumbotron h1 {
   font-weight: 100;
   color: white;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   font-size: 28px;
   text-transform: uppercase;
   text-align: center;
@@ -141,7 +141,7 @@ footer i {
 .jumbotron h2 {
   font-weight: 100;
   color: white;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   font-size: 32px;
   text-align: center;
 }
@@ -164,7 +164,7 @@ footer i {
   margin: 0;
   margin-left: -11px;
   left: 50%;
-  bottom: 75px;
+  bottom: 85px;
   transition: all 0.8s ease;
   z-index: 801;
 }
@@ -242,7 +242,8 @@ footer i {
   border-bottom-right-radius: 20px;
   border: 1px solid white;
   border-top: none;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .custom-popup-wrapper > .message {
