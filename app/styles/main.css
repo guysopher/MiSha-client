@@ -164,7 +164,7 @@ footer i {
   margin: 0;
   margin-left: -11px;
   left: 50%;
-  bottom: 85px;
+  bottom: 95px;
   transition: all 0.8s ease;
   z-index: 801;
 }
@@ -295,8 +295,8 @@ footer i {
 }
 
 .user-details .user-image {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   background-size: cover;
   border-radius: 80px;
   display: block;
@@ -319,13 +319,14 @@ footer i {
 
 .user-details .user-texts li.name a{
   text-transform: uppercase;
-  font-size: 22px;
-  line-height: 32px;
+  font-size: 30px;
+  line-height: 40px;
 }
 
 .user-details .user-texts li a {
   color: white !important;
-  font-size: 14px;
+  font-size: 20px;
+  line-height: 30px;
   font-weight: 100;
   text-decoration: none !important;
 }
