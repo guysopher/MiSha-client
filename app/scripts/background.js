@@ -151,7 +151,7 @@ var seenLoop = function seenLoop() {
       var lat = res.coords.latitude;
       var lon = res.coords.longitude;
 
-      if (lat < 32.102660 && lat > 32.096141 && lon > 34.772296 && lon < 34.777674) {
+      if (lat < 32.103 && lat > 32.09 && lon > 34.777 && lon < 34.7785) {
         //user is in the port
         console.log("You're at Tel Aviv port");
         me.reasons['Not at Tel-Aviv Port'] = false;
