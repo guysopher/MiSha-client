@@ -1,9 +1,11 @@
 <div class="jumbotron" ng-if="started !== true" ng-cloak>
   <img class="main-page" src="images/white-81x85.png"/>
 
-  <h2 style="font-family:'belinda'">misha.m</h2>
-  <h4>NEVER NEEDLESSLY WALK AGAIN</h4>
-  <button class="message-person blue" ng-click="start()" ng-if="started != 'init' " >SEARCH NOW</button>
+  <h1 ng-if="errorMsg">{{errorMsg}}</h1>
+
+  <h2 ng-if="!errorMsg" style="font-family:'belinda'">misha.m</h2>
+  <h4 ng-if="!errorMsg">NEVER NEEDLESSLY WALK AGAIN</h4>
+  <button ng-if="!errorMsg && (started != 'init')" class="message-person blue" ng-click="start()" >SEARCH NOW</button>
 </div>
 
 <div class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusy" ng-cloak>

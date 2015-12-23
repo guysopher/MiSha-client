@@ -44,7 +44,7 @@ angular
     $scope.users = [];
     $scope.started = 'init';
     chrome.storage.local.get('started', function(res){
-      if (res.started) {
+      if (res.started && bg.isLegitUser) {
         $scope.started = res.started;
       } else {
         $scope.started = false;
@@ -73,6 +73,7 @@ angular
       $scope.me = bg && bg.me;
       $scope.username = bg && bg.me && bg.me.name && bg.me.name.split(' ')[0];
       $scope.users = bg.users;
+      if (!bg.isLegitUser) $scope.started = false;
     }
 
     $scope.hideHeader = function() {
@@ -87,8 +88,14 @@ angular
     }
 
     $scope.start = function() {
-      chrome.storage.local.set({'started' : true});
-      $scope.started = true;
+      if (bg.isLegitUser) {
+        chrome.storage.local.set({'started': true});
+        $scope.started = true;
+      } else {
+        $scope.started = false;
+
+        $scope.errorMsg = ("Please use your Wix user account");
+      }
     }
 
     $scope.toggleDetails = function(state) {

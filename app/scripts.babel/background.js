@@ -16,9 +16,9 @@ var api = isDevMode() ? 'http://localhost:1337' : 'http://misha-api.herokuapp.co
 var me = undefined;
 var users = undefined;
 
-var seenInterval = 5 * 1000;
-var awayDuration = 1 * 60;
-var calenderCheckInterval = 2 * 60 * 1000;
+var seenInterval = 15 * 1000;
+var awayDuration = 2 * 60;
+var calenderCheckInterval = 5 * 60 * 1000;
 var refreshUsersInterval = 5 * 60 * 1000;
 
 var busyCalender = false;
@@ -34,7 +34,7 @@ var checkBusyCalendar = function () {
     chrome.identity.getAuthToken({ 'interactive': true, scopes:['https://www.googleapis.com/auth/calendar']}, function(token) {
       var now = new Date();
       var next = new Date();
-      next.setTime(now.getTime() + (30*60*1000)); //half an hour
+      next.setTime(now.getTime() + (calenderCheckInterval)); //half an hour
       var nowI = now.toISOString();
       var nextI = next.toISOString();
 
@@ -47,9 +47,14 @@ var checkBusyCalendar = function () {
         busyCalender = false;
         if (data && data.items && data.items.length > 0) {
           for (var i=0; i < data.items.length; i++) {
-            if (data.items[i].transparency != "transparent") {
-              busyCalender = true;
-              break;
+            var item = data.items[i];
+            if (item.transparency != "transparent" && item.status == "confirmed") {
+              for (var att, a=0; att = item.attendees[a]; a++) {
+                if (att.self && att.responseStatus == "accepted") {
+                  busyCalender = true;
+                  break;
+                }
+              }
             }
           }
         }
@@ -237,6 +242,7 @@ var initInterval = function () {
 
 var getUserIdFromEmail = function (email) {
   $.get(api + '/user?email=' + email, function (res) {
+    clearInterval(initUserInterval);
     me = res[0];
     console.log('Got User:', me);
     initInterval();
@@ -246,29 +252,20 @@ var getUserIdFromEmail = function (email) {
   });
 }
 
-chrome.identity.getProfileUserInfo(function (res) {
-  if (res.email && res.email.indexOf('@wix.com') > 0) {
-    getUserIdFromEmail(res.email);
-  //} else {
-  //  chrome.storage.local.get('me', function(res) {
-  //    if (res.me) {
-  //      refreshUser();
-  //      initInterval(res.me);
-  //    } else {
-  //      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-  //        //load Google's javascript client libraries
-  //
-  //        var x = new XMLHttpRequest();
-  //        x.open('GET', 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
-  //        x.onload = function () {
-  //          var parsed_response = JSON.parse(x.response);
-  //          getUserIdFromEmail(parsed_response.email);
-  //        };
-  //        x.send();
-  //      });
-  //    }
-  //  });
-  }
-});
+var isLegitUser = true;
+var initUserInterval = setInterval(initUser, 30 * 1000);
+initUser();
+
+function initUser() {
+  chrome.identity.getProfileUserInfo(function (res) {
+    if (res.email && res.email.indexOf('@wix.com') > 0) {
+      getUserIdFromEmail(res.email);
+    } else {
+      clearInterval(initUser);
+      isLegitUser = false;
+    }
+  });
+}
+
 
 chrome.browserAction.setIcon({'path': api + '/images/icons/blue.png'})
